@@ -14,8 +14,9 @@ window.SACC_CONFIG = {
     "Fernando Coelho": "assets/fotos/fernando-coelho.jpg",
     "Raquel Brombilla": "assets/fotos/raquel-brombilla.jpg",
     "Uianes Luiz Rockenbach Biondo": "assets/fotos/uianes-biondo.png",
+    "William Alexandre Ferreira": "assets/fotos/william-ferreira.jpg",
   },
-  pendingPeople: ["William Alexandre Ferreira"],
+  pendingPeople: [],
 
   schedule: [
     {
@@ -32,7 +33,7 @@ window.SACC_CONFIG = {
       day: "Terça", date: "10/11", place: "Salão social",
       items: [
         { time: "19:15", tag: "palestra", title: "Letramento em IA, Ética e Práticas", people: ["Fernando Coelho"] },
-        { time: "20:15", tag: "palestra", title: "Empreendedorismo, blockchain, carreira", flag: "Tema provisório", people: ["Augusto Roberto Gehrke"] },
+        { time: "20:15", tag: "palestra", title: "Empreendedorismo, blockchain, carreira", people: ["Augusto Roberto Gehrke"] },
         { time: "21:30", pause: true, title: "Coffee break" },
       ],
     },
@@ -53,7 +54,6 @@ window.SACC_CONFIG = {
         { time: "19:00", tag: "minicurso", title: "Busca semântica com o uso de LLMs no Databricks", people: ["Camila Munzlinger"] },
         { time: "19:00", tag: "minicurso", title: "Modelagem 3D: componentes para impressão 3D", people: ["Artur da Motta Deters"] },
         { time: "19:00", tag: "minicurso", title: "Mercado de TI: por onde começar?", people: ["Alisson Garcia"] },
-        { time: "19:00", tag: "minicurso", title: "Tema a definir", people: ["William Alexandre Ferreira"] },
         { time: "20:40", pause: true, title: "Coffee break", place: "Prédio de TI" },
       ],
     },
