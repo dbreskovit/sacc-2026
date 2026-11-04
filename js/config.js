@@ -1,7 +1,6 @@
 // Dados do evento que mudam com frequência ficam aqui.
 window.SACC_CONFIG = {
-  // TODO: trocar pelo link real do Google Forms
-  formsUrl: "https://forms.gle/SUBSTITUIR",
+  formsUrl: "https://docs.google.com/forms/d/e/1FAIpQLScxb1kE6Y8KQJjxcqGcPHTwzg0vsjM39yFIE1j2UgArZVTD0Q/viewform?usp=dialog",
   // início do evento (horário de Brasília)
   eventStart: "2026-11-09T08:00:00-03:00",
 
