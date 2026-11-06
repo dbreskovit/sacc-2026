@@ -39,7 +39,7 @@
     const tag = it.tag ? `<span class="tag tag--${it.tag}">${it.tag}</span>` : "";
     const flag = it.flag ? `<span class="tag tag--warn">${it.flag}</span>` : "";
     return `<li class="slot${media ? "" : " slot--group"}">${media}<div class="slot__body">
-      <p class="slot__meta"><time>${it.time}</time>${tag}${flag}${solo ? pending(solo) : ""}</p>
+      <p class="slot__meta"><time>${it.time}</time>${tag}${flag}${solo ? pending(solo) : ""}${place}</p>
       ${solo ? `<p class="slot__name">${solo}</p>` : ""}
       <h4>${it.title}</h4>
       ${it.note ? `<p class="slot__note">${it.note}</p>` : ""}

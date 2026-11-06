@@ -8,7 +8,7 @@ window.SACC_CONFIG = {
     "Alisson Garcia": "assets/fotos/alisson-garcia.jpg",
     "Ana Maria Cavasin": "assets/fotos/ana-cavasin.jpg",
     "Artur da Motta Deters": "assets/fotos/artur-deters.png",
-    "Augusto Roberto Gehrke": "assets/fotos/augusto-gehrke.jpg",
+    "Augusto Roberto Gehrke": "assets/fotos/augusto-gehrke.jpeg",
     "Camila Munzlinger": "assets/fotos/camila-munzlinger.jpg",
     "Fernando Coelho": "assets/fotos/fernando-coelho.jpg",
     "Raquel Brombilla": "assets/fotos/raquel-brombilla.jpg",
@@ -49,10 +49,10 @@ window.SACC_CONFIG = {
     {
       day: "Quinta", date: "12/11",
       items: [
-        { time: "19:00", tag: "minicurso", title: "IA na prática: construindo agentes inteligentes com MCP e Python", people: ["Raquel Brombilla"] },
-        { time: "19:00", tag: "minicurso", title: "Busca semântica com o uso de LLMs no Databricks", people: ["Camila Munzlinger"] },
-        { time: "19:00", tag: "minicurso", title: "Modelagem 3D: componentes para impressão 3D", people: ["Artur da Motta Deters"] },
-        { time: "19:00", tag: "minicurso", title: "Mercado de TI: por onde começar?", people: ["Alisson Garcia"] },
+        { time: "19:00", tag: "minicurso", title: "IA na prática: construindo agentes inteligentes com MCP e Python", place: "LAB 310", people: ["Raquel Brombilla"] },
+        { time: "19:00", tag: "minicurso", title: "Busca semântica com o uso de LLMs no Databricks", place: "LAB 201", people: ["Camila Munzlinger"] },
+        { time: "19:00", tag: "minicurso", title: "Modelagem 3D: componentes para impressão 3D", place: "LAB 205", people: ["Artur da Motta Deters"] },
+        { time: "19:00", tag: "minicurso", title: "Mercado de TI: por onde começar?", place: "LAB REDES (prédio anexo)", people: ["Alisson Garcia"] },
         { time: "20:40", pause: true, title: "Coffee break", place: "Prédio de TI" },
       ],
     },
