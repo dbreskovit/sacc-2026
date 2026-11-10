@@ -35,7 +35,9 @@
     }
     const people = it.people || [];
     const solo = people.length === 1 ? people[0] : null;
-    const media = solo ? avatar(solo) : it.icon ? `<span class="avatar" aria-hidden="true">${icon(it.icon)}</span>` : "";
+    const media = solo ? avatar(solo) : it.logo
+      ? `<img class="avatar avatar--logo" src="${it.logo}" alt="" loading="lazy">`
+      : it.icon ? `<span class="avatar" aria-hidden="true">${icon(it.icon)}</span>` : "";
     const tag = it.tag ? `<span class="tag tag--${it.tag}">${it.tag}</span>` : "";
     const flag = it.flag ? `<span class="tag tag--warn">${it.flag}</span>` : "";
     return `<li class="slot${media ? "" : " slot--group"}">${media}<div class="slot__body">

@@ -532,6 +532,7 @@ body::before {
   border: var(--px) solid var(--magenta-deep);
   font-family: var(--f-display); font-size: 32px; color: var(--magenta);
 }
+.avatar--logo { object-fit: contain; }
 
 /* Atividade com várias pessoas: foto e nome de cada uma */
 .people {

@@ -40,9 +40,10 @@ window.SACC_CONFIG = {
       day: "Quarta", date: "11/11", place: "Salão social",
       items: [
         {
-          time: "19:15", title: "Carreira acadêmica X Carreira profissional",
+          time: "19:15", title: "Carreira acadêmica VS Carreira profissional",
           people: ["Raquel Brombilla", "Ana Maria Cavasin", "Camila Munzlinger", "Alisson Garcia", "William Alexandre Ferreira"],
         },
+        {time: "21:00", title: "Show da Banda MERAKI", logo: "assets/meraki.png", note: "Banda formada por alunos do curso de Ciência da Computação do IFFAR/FW"},
         { time: "21:30", pause: true, title: "Coffee break" },
       ],
     },
