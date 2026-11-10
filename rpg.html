@@ -1,0 +1,1330 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Três Noites de Aventura · Noite de Jogos · SACC</title>
+  <meta name="description" content="Noite de jogos da Semana Acadêmica de Ciência da Computação do IFFAR/FW: escolha uma one-shot de D&amp;D 5e e monte sua ficha.">
+  <meta name="theme-color" content="#050208">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Pixelify+Sans:wght@400;600&family=VT323&family=Grenze:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+<style>
+/* =========================================================
+   Noite de jogos · RPG
+   ---------------------------------------------------------
+   Tokens, botão, etiqueta, menu e rodapé vêm de css/style.css.
+   Aqui ficam só as peças do criador de ficha. Cada aventura
+   troca o acento: forja amarelo, jardim ciano, casamento magenta.
+   ========================================================= */
+:root{
+  /* apelidos locais para os tokens do site */
+  --bg:var(--void); --surface:var(--panel); --raised:var(--void); --ink:var(--phosphor); --line:var(--magenta-deep);
+  --forja:var(--rgb-y); --jardim:var(--rgb-c); --casamento:var(--magenta); --ok:var(--rgb-c); --warn:var(--rgb-r);
+  --accent:var(--forja);
+  --display:var(--f-display); --body:var(--f-body);
+  /* VT323 é fina: com 1rem = 22px o formulário fica no mesmo corpo do site */
+  font-size:22px;
+}
+body[data-adv="forja"]{--accent:var(--forja)}
+body[data-adv="jardim"]{--accent:var(--jardim)}
+body[data-adv="casamento"]{--accent:var(--casamento)}
+
+[hidden]{display:none!important}
+body{padding-top:calc(var(--nav-h) + env(safe-area-inset-top,0px) + 40px)}
+.page{max-width:960px;display:flex;flex-direction:column;gap:32px;padding-bottom:72px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,6vw,60px);line-height:.95;letter-spacing:.02em;color:var(--magenta);overflow-wrap:anywhere;
+  text-shadow:-.03em -.02em 0 var(--rgb-r),.03em .02em 0 var(--rgb-c)}
+h2{font-family:var(--f-display);font-weight:700;font-size:clamp(24px,4.4vw,40px);line-height:1;color:var(--accent)}
+h3{font-family:var(--f-sub);font-weight:600;font-size:26px;line-height:1.15}
+p{margin:0;max-width:none}
+b,strong,th{font-weight:400}
+.lede{color:var(--muted);max-width:62ch;font-size:26px;line-height:1.2}
+.eyebrow{font-family:var(--f-display);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+button,select,input,textarea{font:inherit;color:inherit}
+input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px}
+
+header.top{display:flex;flex-direction:column;gap:12px}
+header.top .mod__head{margin:0}
+.top .meta{font-size:var(--t-small);color:var(--muted)}
+.steps{display:flex;flex-wrap:wrap;gap:8px 20px;list-style:none;padding:0;margin:8px 0 0;
+  font-family:var(--f-display);font-size:var(--t-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.steps li{display:flex;align-items:center;gap:8px}
+.steps li b{display:inline-grid;place-items:center;width:28px;height:28px;border:2px solid var(--line)}
+.steps li.on{color:var(--ink)} .steps li.on b{background:var(--accent);border-color:var(--accent);color:var(--void)}
+.steps li.done b{border-color:var(--accent);color:var(--accent)}
+
+/* Cartões de escolha: mesma moldura das janelas do site */
+.advs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.adv,.lvl{all:unset;cursor:var(--cur-pointer,pointer);display:flex;flex-direction:column;position:relative;
+  background:var(--panel);border:var(--px) solid var(--line);box-shadow:8px 8px 0 0 #000}
+.adv{gap:12px;padding:24px 20px 20px}
+.adv::before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:var(--c)}
+.adv:hover,.adv:focus-visible{border-color:var(--c)}
+.adv:focus-visible,.lvl:focus-visible{outline:var(--px) solid var(--rgb-c);outline-offset:var(--px)}
+.adv h3{color:var(--c)}
+.adv .meta{font-size:var(--t-small);color:var(--muted)}
+.adv .tone{align-self:flex-start;padding:4px 8px;border:2px solid currentColor;color:var(--c);
+  font-family:var(--f-display);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.lvl{padding:20px;gap:4px}
+.lvl:hover,.lvl:focus-visible{border-color:var(--accent)}
+.lvl .n{font-family:var(--f-display);font-weight:700;font-size:30px;line-height:1.1;color:var(--accent)}
+.lvl .who{font-family:var(--f-sub);font-size:22px}
+.lvl .d{font-size:var(--t-small);color:var(--muted)}
+
+.briefing{border-left:var(--px) solid var(--accent);padding:4px 0 4px 20px;display:flex;flex-direction:column;gap:12px;max-width:62ch}
+.briefing p{font-size:26px;line-height:1.2}
+.briefing .who{color:var(--muted)}
+.contract{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:0}
+.contract div{padding:12px 14px;background:var(--panel);border:2px solid var(--line)}
+.contract dt{font-family:var(--f-display);font-size:var(--t-label);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.contract dd{margin:4px 0 0;font-family:var(--f-sub);font-size:26px;font-variant-numeric:tabular-nums}
+
+/* Botões: os do site, com a cor da aventura */
+.btnrow{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center}
+.page .btn{cursor:var(--cur-pointer,pointer)}
+.page .btn>span{background:var(--accent);font-size:15px;padding:12px 18px}
+.page .btn--ghost>span{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 var(--px) var(--accent)}
+.page .btn--ghost:hover>span{background:var(--accent);color:var(--void)}
+.page .btn[disabled]{opacity:.45;filter:none;cursor:not-allowed}
+.page .btn[disabled]>span{background:var(--accent)}
+.link{all:unset;cursor:var(--cur-pointer,pointer);align-self:flex-start;padding:4px 6px;margin-left:-6px;
+  font-family:var(--f-display);font-size:var(--t-label);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.link:hover{background:var(--accent);color:var(--void)}
+.link:focus-visible{outline:var(--px) solid var(--rgb-c)}
+
+/* Formulário: cada bloco é uma janela, a legenda é a barra de título */
+fieldset{border:var(--px) solid var(--line);padding:20px;margin:0;display:flex;flex-direction:column;gap:16px;background:var(--panel);min-width:0;box-shadow:8px 8px 0 0 #000}
+legend{background:var(--line);padding:4px 8px;font-family:var(--f-display);font-size:var(--t-label);letter-spacing:.08em;text-transform:uppercase}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:var(--t-small);color:var(--muted);min-width:0}
+select,input[type=text],input[type=number],textarea{background:var(--void);border:2px solid var(--line);border-radius:0;padding:6px 10px;color:var(--ink);width:100%;min-width:0}
+select:focus,input:focus,textarea:focus{border-color:var(--accent)}
+textarea{resize:vertical;line-height:1.2}
+::placeholder{color:var(--muted);opacity:.7}
+.hint{font-size:var(--t-small);color:var(--muted)}
+.seg{display:inline-flex;flex-wrap:wrap;align-self:flex-start;border:2px solid var(--line)}
+.seg button{all:unset;cursor:var(--cur-pointer,pointer);padding:8px 12px;font-family:var(--f-display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--void)}
+.seg button:focus-visible{outline:var(--px) solid var(--rgb-c);outline-offset:calc(-1 * var(--px))}
+
+.abil{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+@media (max-width:620px){.abil{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ab{border:2px solid var(--line);padding:8px 6px;text-align:center;background:var(--void);display:flex;flex-direction:column;gap:4px;align-items:center;min-width:0}
+.ab .k{font-family:var(--f-display);font-size:12px;letter-spacing:.08em;color:var(--muted)}
+.ab .v{font-family:var(--f-display);font-weight:700;font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
+.ab .pb{display:flex;gap:4px;align-items:center}
+.ab .pb button{all:unset;cursor:var(--cur-pointer,pointer);width:28px;height:28px;border:2px solid var(--line);text-align:center;line-height:26px}
+.ab .pb button:hover{border-color:var(--accent);color:var(--accent)}
+.ab .pb button:focus-visible{outline:var(--px) solid var(--rgb-c)}
+.ab select,.ab input{padding:4px;text-align:center}
+.budget{font-family:var(--f-display);font-size:var(--t-label);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.budget.bad{color:var(--warn)}
+
+.crows{display:flex;flex-direction:column;gap:12px}
+.crow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.7fr) 84px auto;gap:10px;align-items:end;padding-bottom:12px;border-bottom:2px dashed var(--line)}
+.crow:last-child{border-bottom:0;padding-bottom:0}
+.crow .rm{all:unset;cursor:var(--cur-pointer,pointer);color:var(--muted);font-size:var(--t-small);padding:8px 4px}
+.crow .rm:hover,.crow .rm:focus-visible{color:var(--warn)}
+@media (max-width:620px){.crow{grid-template-columns:1fr 1fr}.crow>:nth-child(2){grid-column:1/-1;grid-row:2}}
+.rolls{display:flex;flex-wrap:wrap;gap:8px}
+.roll{border:2px solid var(--line);background:var(--void);padding:6px 10px;display:flex;flex-direction:column;align-items:center;min-width:64px}
+.roll b{font-family:var(--f-display);font-weight:700;font-size:24px;line-height:1.1;color:var(--accent);font-variant-numeric:tabular-nums}
+.roll span{font-size:var(--t-small);color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.roll s{opacity:.55}
+.roll.used{opacity:.4}
+.mclass{display:flex;flex-direction:column;gap:10px;padding-bottom:16px;border-bottom:2px dashed var(--line)}
+.mclass:last-child{border-bottom:0;padding-bottom:0}
+.mclass h3{font-size:22px}
+.mlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.mlist label{display:flex;flex-direction:column;gap:2px;font-size:18px;color:var(--muted);min-width:0}
+.mlist label.nova{color:var(--accent)}
+.skgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:4px 12px}
+.skgrid label{display:flex;gap:8px;align-items:center;font-size:20px;color:var(--ink)}
+.skgrid label.fixo{color:var(--muted)}
+.skgroup{display:flex;flex-direction:column;gap:8px}
+.atk{display:grid;grid-template-columns:minmax(0,1.6fr) 90px minmax(0,1.4fr);gap:8px}
+
+/* Folha de personagem: continua no formato de papel da ficha oficial,
+   com tinta própria e as fontes de livro; não segue o tema pixel da página */
+.dnd{
+  --ink:#1B1E22; --muted:#5B626A; --line:#C8CDC4; --surface:#F7F8F4; --raised:#FFFFFF;
+  --serif:"Grenze","Palatino Linotype",Georgia,serif; --sans:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:light; color:var(--ink); font-family:var(--sans); font-size:17px; line-height:1.55; -webkit-font-smoothing:auto;
+  border:2px solid var(--ink);border-radius:10px;background:var(--raised);padding:14px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.dnd b,.dnd strong,.dnd th{font-weight:700}
+.dnd h3{font-family:var(--serif);font-weight:700;font-size:21px;line-height:1.1}
+.dnd .note{font-size:14px;color:var(--muted)}
+.dnd .slots{font-size:15px;font-variant-numeric:tabular-nums}
+.dnd .cap{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);text-align:center}
+.dhead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:12px;align-items:end}
+@media (max-width:640px){.dhead{grid-template-columns:1fr}}
+.dname{border:1.5px solid var(--ink);border-radius:8px;padding:10px 12px}
+.dname b{display:block;font-family:var(--serif);font-size:24px;line-height:1.1;border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:2px;overflow-wrap:anywhere}
+.dname .cap{text-align:left}
+.dfields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 12px;border:1.5px solid var(--ink);border-radius:8px;padding:10px 12px}
+@media (max-width:480px){.dfields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.dfields div{min-width:0}
+.dfields span{display:block;border-bottom:1px solid var(--line);font-size:15px;min-height:1.4em;overflow-wrap:anywhere}
+.dfields .cap{text-align:left}
+.dbody{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start}
+@media (max-width:820px){.dbody{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.dbody{grid-template-columns:1fr}}
+.dcol{display:flex;flex-direction:column;gap:10px;min-width:0}
+.dleft{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px}
+.abstack{display:flex;flex-direction:column;gap:10px;background:var(--surface);border-radius:8px;padding:8px 6px}
+.abox{border:1.5px solid var(--ink);border-radius:8px;background:var(--raised);text-align:center;padding:4px 2px 14px;position:relative;margin-bottom:8px}
+.abox .cap{font-size:9px}
+.abox .md{font-family:var(--serif);font-size:27px;line-height:1.1;font-variant-numeric:tabular-nums}
+.abox .sc{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);border:1.5px solid var(--ink);border-radius:999px;background:var(--raised);font-size:13px;padding:0 8px;font-variant-numeric:tabular-nums}
+.pill{display:flex;align-items:center;gap:8px;border:1.5px solid var(--ink);border-radius:999px;padding:3px 10px 3px 3px;font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.pill b{display:inline-grid;place-items:center;min-width:30px;height:30px;border:1.5px solid var(--ink);border-radius:50%;font-size:15px;letter-spacing:0;background:var(--raised)}
+.dbox{border:1.5px solid var(--ink);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.dbox .cap{margin-top:4px}
+.lrow{display:grid;grid-template-columns:14px 30px minmax(0,1fr);gap:4px;align-items:center;font-size:13px;line-height:1.35}
+.lrow .dot{font-size:11px;color:var(--ink)}
+.lrow .bn{border-bottom:1px solid var(--line);text-align:center;font-variant-numeric:tabular-nums}
+.lrow small{color:var(--muted);font-size:11px}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.big{border:1.5px solid var(--ink);border-radius:8px;text-align:center;padding:6px 4px}
+.big b{display:block;font-family:var(--serif);font-size:26px;line-height:1.2;font-variant-numeric:tabular-nums}
+.big.ac{border-radius:10px 10px 50% 50%/10px 10px 30% 30%;padding-bottom:12px}
+.hp{border:1.5px solid var(--ink);border-radius:8px;padding:8px 10px}
+.hp .line{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:4px}
+.hp .line b{color:var(--ink);font-variant-numeric:tabular-nums}
+.hp .blank{height:44px}
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.death{font-size:12.5px;display:flex;flex-direction:column;gap:2px}
+.death span{letter-spacing:.2em}
+.dtable{width:100%;font-size:13px;border-collapse:collapse}
+.dtable th{font-family:inherit;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:2px 4px;border-bottom:1px solid var(--line)}
+.dtable td{padding:3px 4px;border-bottom:1px solid var(--line);font-size:13px}
+.dtext{white-space:pre-wrap;font-size:13.5px;min-height:3.2em;overflow-wrap:anywhere}
+.dtext.vazio{color:var(--muted);font-style:italic}
+.dspell{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.dspell ol{margin:0;padding-left:1.2em;font-size:13.5px}
+.sheet{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.sheet{grid-template-columns:1fr}}
+.col{border:2px solid var(--line);background:var(--panel);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.col.next{border-color:var(--accent)}
+.col h3 .tag{margin-left:8px;vertical-align:middle;color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{border-bottom:2px solid var(--line);padding-bottom:6px}
+.stat .k{font-family:var(--f-display);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stat .v{font-family:var(--f-display);font-weight:700;font-size:22px;font-variant-numeric:tabular-nums}
+.mods{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;text-align:center;font-variant-numeric:tabular-nums}
+.mods div{font-family:var(--f-display);font-size:10px;color:var(--muted)} .mods b{display:block;font-family:var(--f-body);color:var(--ink);font-size:24px}
+.mods .sv b::after{content:"■";font-size:10px;vertical-align:super;color:var(--accent);margin-left:2px}
+.note{font-size:var(--t-small);color:var(--muted)}
+.slots{font-size:20px;font-variant-numeric:tabular-nums}
+
+.banner{padding:12px 16px;border:2px solid var(--line);background:var(--panel);font-size:var(--t-small)}
+.banner.ok{border-color:var(--ok)} .banner.warn{border-color:var(--warn)}
+.banner strong{color:var(--accent)}
+
+.books{font-size:var(--t-small);color:var(--muted);max-width:none}
+/* entrada de cada etapa em degraus, como o resto do site */
+.view{animation:enter .3s steps(3) both}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Principal">
+  <div class="wrap">
+    <a class="nav__logo" href="index.html"><img src="assets/logo-da-icon.svg" alt="Diretório Acadêmico, voltar ao site"></a>
+    <ul class="nav__links">
+      <li><a href="index.html#sobre">SOBRE</a></li>
+      <li><a href="index.html#cronograma">CRONOGRAMA</a></li>
+      <li><a class="is-cta" href="index.html">◀ SITE</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap page">
+  <header class="top">
+    <div class="mod__head"><span class="mod__path">C:\SACC\SEXTA\<b>rpg.exe</b></span></div>
+    <p class="eyebrow">Sexta, 13/11 · Noite de jogos · Prédio de TI</p>
+    <h1>Três Noites de Aventura</h1>
+    <p class="meta">One-shots de D&amp;D 5e · 3 horas · 4 a 5 jogadores</p>
+    <p class="lede">Escolha a aventura e o nível da mesa, leia o chamado e monte seu personagem. A ficha já sai calculada no nível de início e no nível seguinte, que você alcança antes do confronto final.</p>
+    <ol class="steps" id="steps" aria-label="Etapas"></ol>
+  </header>
+
+  <div id="statusBanner" hidden></div>
+
+  <!-- 1. aventura -->
+  <section class="view" id="v-aventura">
+    <div class="advs" id="advList"></div>
+  </section>
+
+  <!-- 2. nível -->
+  <section class="view" id="v-nivel" hidden>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <button class="link" data-go="aventura">← Trocar de aventura</button>
+      <h2 id="nivelTitle"></h2>
+      <p class="lede">Em qual mesa você quer jogar?</p>
+      <div class="levels" id="lvlList"></div>
+    </div>
+  </section>
+
+  <!-- 3. briefing -->
+  <section class="view" id="v-briefing" hidden>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <button class="link" data-go="nivel">← Trocar de nível</button>
+      <div>
+        <p class="eyebrow" id="brEyebrow"></p>
+        <h2 id="brTitle"></h2>
+      </div>
+      <div class="briefing" id="brText"></div>
+      <dl class="contract" id="brContract"></dl>
+      <div class="btnrow"><button class="btn" data-go="ficha"><span>▶ Montar minha ficha</span></button></div>
+    </div>
+  </section>
+
+  <!-- 4. ficha -->
+  <section class="view" id="v-ficha" hidden>
+    <form id="fichaForm" style="display:flex;flex-direction:column;gap:18px" autocomplete="off">
+      <button type="button" class="link" data-go="briefing">← Voltar ao chamado</button>
+      <div>
+        <p class="eyebrow" id="fiEyebrow"></p>
+        <h2>Seu personagem</h2>
+      </div>
+
+      <fieldset>
+        <legend>Quem é</legend>
+        <div class="grid2">
+          <label class="f">Nome do personagem<input type="text" id="nomePers" maxlength="60" placeholder="Ex.: Brin Ferrugem"></label>
+          <label class="f">Seu nome (jogador)<input type="text" id="nomeJog" maxlength="60" placeholder="Como o mestre te chama"></label>
+          <label class="f">Antecedente<select id="antecedente"></select></label>
+          <label class="f">Tendência<select id="tendencia"></select></label>
+        </div>
+        <div id="antPersBox" hidden style="display:flex;flex-direction:column;gap:12px"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Origem</legend>
+        <div class="grid2">
+          <label class="f">Raça<select id="raca"></select></label>
+          <div id="asiBox" class="grid2" style="grid-column:1/-1"></div>
+        </div>
+        <p class="hint" id="racaHint"></p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Classes</legend>
+        <p class="hint">A primeira linha é a classe inicial: ela define as resistências, as proficiências completas e os PV máximos do 1º nível. Para multiclasse, adicione outra classe e divida os níveis.</p>
+        <div id="classRows" class="crows"></div>
+        <div class="btnrow">
+          <button type="button" class="btn btn--ghost" id="addClass"><span>+ Adicionar classe</span></button>
+          <span class="budget" id="classTotal"></span>
+        </div>
+        <div class="banner warn" id="classWarn" hidden></div>
+        <div class="grid2">
+          <label class="f">Armadura<select id="armadura"></select></label>
+          <label class="f" style="flex-direction:row;align-items:center;gap:8px;color:var(--ink)" id="escudoWrap"><input type="checkbox" id="escudo"> Usa escudo (+2 CA)</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Atributos</legend>
+        <div class="seg" role="group" aria-label="Método" id="metodo">
+          <button type="button" data-m="compra" aria-pressed="true">Compra de pontos</button>
+          <button type="button" data-m="padrao" aria-pressed="false">Valores padrão</button>
+          <button type="button" data-m="aleatorio" aria-pressed="false">Rolar 4d6</button>
+        </div>
+        <p class="hint" id="metodoHint"></p>
+        <div id="rollBox" hidden></div>
+        <div class="abil" id="abilBox"></div>
+      </fieldset>
+
+      <fieldset id="periciasBox">
+        <legend>Perícias</legend>
+      </fieldset>
+
+      <fieldset id="asiNextBox">
+        <legend id="asiNextLegend">Subida de nível</legend>
+      </fieldset>
+
+      <fieldset id="magiasBox" hidden>
+        <legend>Magias</legend>
+      </fieldset>
+
+      <fieldset id="detalhesBox">
+        <legend>Personagem e equipamento</legend>
+        <div class="grid2">
+          <label class="f">Traços de personalidade<textarea id="d-pers" rows="3" maxlength="400"></textarea></label>
+          <label class="f">Ideais<textarea id="d-ideais" rows="3" maxlength="300"></textarea></label>
+          <label class="f">Vínculos<textarea id="d-vinc" rows="3" maxlength="300"></textarea></label>
+          <label class="f">Defeitos<textarea id="d-def" rows="3" maxlength="300"></textarea></label>
+        </div>
+        <p class="eyebrow">Ataques</p>
+        <div id="ataquesBox" class="crows"></div>
+        <div class="grid2">
+          <label class="f">Equipamento<textarea id="d-equip" rows="4" maxlength="800" placeholder="O do antecedente e da classe, mais o que comprar com o adiantamento"></textarea></label>
+          <label class="f">Idiomas e outras proficiências<textarea id="d-idiomas" rows="4" maxlength="500"></textarea></label>
+        </div>
+        <label class="f">Características e talentos<textarea id="d-carac" rows="5" maxlength="1500" placeholder="Habilidades de raça e de classe, talentos"></textarea></label>
+      </fieldset>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="btnrow" style="justify-content:space-between">
+          <h3>Ficha de personagem</h3>
+          <div class="seg" role="group" aria-label="Nível da ficha" id="verNivel"></div>
+        </div>
+        <div id="sheet"></div>
+      </div>
+
+      <div class="banner" id="saveMsg" hidden></div>
+      <div class="btnrow">
+        <button type="submit" class="btn" id="saveBtn"><span>▶ Confirmar inscrição</span></button>
+        <span class="hint" id="saveHint"></span>
+      </div>
+    </form>
+  </section>
+
+  <p class="books">Livros permitidos: Livro do Jogador, Livro do Mestre, Guia de Xanathar para Todas as Coisas, Caldeirão de Tasha para Tudo e Coisas e Manual dos Monstros. Os detalhes de cada habilidade estão nos livros; esta página faz as contas.</p>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__row">
+    <span class="footer__brand">
+      <img src="assets/logo-da-icon.svg" alt="Diretório Acadêmico">
+      &gt; Noite de jogos · Sexta, 13/11/2026
+    </span>
+    <span class="footer__repo">
+      PARTE DA
+      <a href="index.html">Semana Acadêmica</a>
+    </span>
+  </div>
+</footer>
+
+<script src="js/pixel.js"></script>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const el=(t,a={},...kids)=>{const e=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==="class")e.className=v;else if(k==="text")e.textContent=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v)}for(const c of kids)if(c!=null)e.append(c);return e};
+
+/* ---------- dados das aventuras ---------- */
+const NIVEIS={
+  3:{rotulo:"Iniciantes",metal:"bronze",contrato:150,adiant:100,desc:"Primeira vez ou pouca experiência. Fichas simples, encontros diretos."},
+  5:{rotulo:"Avançados",metal:"prata",contrato:450,adiant:300,desc:"Já conhece o sistema. Encontros táticos e mais escolhas."},
+  11:{rotulo:"Veteranos",metal:"ouro",contrato:3000,adiant:1000,desc:"Domina a própria ficha. Turnos longos e poderes grandes."}
+};
+const ADV={
+  forja:{nome:"A Forja do Anão Esquecido",tom:"Exploração e máquinas",local:"Pico Fumegante",resumo:"Constructos estão descendo de uma montanha anã abandonada. Alguém precisa descobrir de onde vêm e fazer isso parar.",quem:"Lyandor, mercador e instrutor da guilda",
+    briefing:["Ah, vocês chegaram! Sentem, sentem, cuidado com as engrenagens na cadeira. Vou direto ao ponto, porque esse caso é fascinante.",
+      "Há duas semanas, pastores do Pico Fumegante começaram a ver figuras de metal descendo a encosta. Armaduras andando sozinhas, sem ninguém dentro. Um caçador conseguiu derrubar uma, e ela está aqui. Vejam esta marca no peito: é de um clã anão que ninguém vê há gerações.",
+      "E tem mais. Sai calor e fumaça de uma fenda na encosta, mesmo nas noites frias. Os mineiros juram ouvir marteladas lá dentro, sempre no mesmo ritmo. E houve um tremor de terra na região poucas semanas antes de tudo começar.",
+      "O que eu não sei é quantos são, de onde vêm ou o quanto são perigosos. Por isso estou mandando vocês. Investiguem a região, achem a origem e façam isso parar.",
+      "Adianto uma parte do pagamento agora, e minha loja está aberta se quiserem gastar antes de sair. Ah, e um pedido pessoal: se encontrarem um núcleo de constructo inteiro, ou qualquer registro escrito desses anões, tragam para mim. Eu pago muito bem."]},
+  jardim:{nome:"O Jardim de Estátuas",tom:"Mistério e terror",local:"Solar Varenne",resumo:"Pessoas somem perto de uma mansão abandonada, e o jardim dela está cheio de estátuas realistas demais.",quem:"Matew Danford, caçador da região",
+    briefing:["Não sou de pedir ajuda. Mas já fui três vezes até aquele muro e não tive coragem de pular.",
+      "Meu irmão, Andrew, saiu para caçar perto do Solar Varenne há seis dias. Não voltou. Ele não é o primeiro: duas pastoras e um mascate sumiram na mesma região este ano.",
+      "Anteontem eu subi numa árvore e olhei por cima do muro. O jardim está cheio de estátuas. E uma delas, ao lado da fonte, é ele. A roupa dele, o arco dele, a cicatriz no queixo. Feito de pedra.",
+      "Não sei o que mora ali. Ninguém entra naquela casa há cinquenta anos. A guilda pôs um contrato no caso. Eu só peço uma coisa: se existir um jeito de trazê-lo de volta, encontrem."]},
+  casamento:{nome:"O Casamento dos Mortos",tom:"Horror gótico",local:"Vel'Durm",resumo:"Toda vez que alguém se casa em Vel'Durm, os mortos se levantam. Hoje tem casamento.",quem:"Diogenes Haskel, ferreiro e noivo",
+    briefing:["Vou me casar hoje à noite. Em Vel'Durm. E metade da minha vila acha que eu enlouqueci.",
+      "Dizem que, toda vez que alguém se casa lá, os mortos saem das covas e só voltam quando o sino bate meia-noite. Faz trinta anos que ninguém tenta. O último casal… bom, o sino não tocou a tempo.",
+      "Eu acho que é história de velho. Mas a Clara não dorme há uma semana. Ontem ela jurou ter ouvido alguém chorando no cemitério.",
+      "Não vou desistir do meu casamento por causa de fantasma. Então quero vocês lá. Se for só boato, comam, bebam e dancem por minha conta. Se não for, cuidem da Clara."]}
+};
+
+/* ---------- dados de regras (só nomes e números) ---------- */
+const AB=["for","des","con","int","sab","car"];
+const ABN={for:"FOR",des:"DES",con:"CON",int:"INT",sab:"SAB",car:"CAR"};
+const ABL={for:"Força",des:"Destreza",con:"Constituição",int:"Inteligência",sab:"Sabedoria",car:"Carisma"};
+const S=(nome,livro)=>({nome,livro});
+const CLASSES={
+  artifice:{nome:"Artífice",dv:8,saves:["con","int"],arm:2,escudo:true,cast:"art",key:"int",livro:"CTTC",subs:[S("Alquimista","CTTC"),S("Armeiro","CTTC"),S("Artilheiro","CTTC"),S("Ferreiro de Batalha","CTTC")]},
+  barbaro:{nome:"Bárbaro",dv:12,saves:["for","con"],arm:2,escudo:true,unarm:"con",subs:[S("Caminho do Berserker","LDJ"),S("Caminho do Guerreiro Totêmico","LDJ"),S("Caminho do Guardião Ancestral","GXTC"),S("Caminho do Arauto da Tempestade","GXTC"),S("Caminho do Fanático","GXTC"),S("Caminho da Fera","CTTC"),S("Caminho da Magia Selvagem","CTTC")]},
+  bardo:{nome:"Bardo",dv:8,saves:["des","car"],arm:1,cast:"full",key:"car",subs:[S("Colégio do Conhecimento","LDJ"),S("Colégio da Bravura","LDJ"),S("Colégio do Glamour","GXTC"),S("Colégio das Espadas","GXTC"),S("Colégio dos Sussurros","GXTC"),S("Colégio da Criação","CTTC"),S("Colégio da Eloquência","CTTC")]},
+  bruxo:{nome:"Bruxo",dv:8,saves:["sab","car"],arm:1,cast:"pact",key:"car",subs:[S("Arquifada","LDJ"),S("Corruptor","LDJ"),S("Grande Antigo","LDJ"),S("Celestial","GXTC"),S("Lâmina Maldita","GXTC"),S("Insondável","CTTC"),S("Gênio","CTTC")]},
+  clerigo:{nome:"Clérigo",dv:8,saves:["sab","car"],arm:2,escudo:true,cast:"full",key:"sab",subs:[S("Domínio do Conhecimento","LDJ"),S("Domínio da Vida","LDJ"),S("Domínio da Luz","LDJ"),S("Domínio da Natureza","LDJ"),S("Domínio da Tempestade","LDJ"),S("Domínio da Trapaça","LDJ"),S("Domínio da Guerra","LDJ"),S("Domínio da Morte","LDM"),S("Domínio da Forja","GXTC"),S("Domínio do Túmulo","GXTC"),S("Domínio da Ordem","CTTC"),S("Domínio da Paz","CTTC"),S("Domínio do Crepúsculo","CTTC")]},
+  druida:{nome:"Druida",dv:8,saves:["int","sab"],arm:2,escudo:true,cast:"full",key:"sab",subs:[S("Círculo da Terra","LDJ"),S("Círculo da Lua","LDJ"),S("Círculo dos Sonhos","GXTC"),S("Círculo do Pastor","GXTC"),S("Círculo dos Esporos","CTTC"),S("Círculo das Estrelas","CTTC"),S("Círculo do Fogo Selvagem","CTTC")]},
+  feiticeiro:{nome:"Feiticeiro",dv:6,saves:["con","car"],arm:0,cast:"full",key:"car",subs:[S("Linhagem Dracônica","LDJ"),S("Magia Selvagem","LDJ"),S("Alma Divina","GXTC"),S("Magia das Sombras","GXTC"),S("Feitiçaria da Tempestade","GXTC"),S("Mente Aberrante","CTTC"),S("Alma Mecânica","CTTC")]},
+  guerreiro:{nome:"Guerreiro",dv:10,saves:["for","con"],arm:3,escudo:true,subs:[S("Campeão","LDJ"),S("Mestre de Batalha","LDJ"),S("Cavaleiro Arcano","LDJ"),S("Arqueiro Arcano","GXTC"),S("Cavaleiro Montado","GXTC"),S("Samurai","GXTC"),S("Guerreiro Psiônico","CTTC"),S("Cavaleiro Rúnico","CTTC")]},
+  ladino:{nome:"Ladino",dv:8,saves:["des","int"],arm:1,subs:[S("Ladrão","LDJ"),S("Assassino","LDJ"),S("Trapaceiro Arcano","LDJ"),S("Inquisitivo","GXTC"),S("Mentor","GXTC"),S("Batedor","GXTC"),S("Espadachim","GXTC"),S("Fantasma","CTTC"),S("Lâmina Psíquica","CTTC")]},
+  mago:{nome:"Mago",dv:6,saves:["int","sab"],arm:0,cast:"full",key:"int",subs:[S("Escola de Abjuração","LDJ"),S("Escola de Adivinhação","LDJ"),S("Escola de Conjuração","LDJ"),S("Escola de Encantamento","LDJ"),S("Escola de Evocação","LDJ"),S("Escola de Ilusão","LDJ"),S("Escola de Necromancia","LDJ"),S("Escola de Transmutação","LDJ"),S("Magia de Guerra","GXTC"),S("Cantor da Lâmina","CTTC"),S("Ordem dos Escribas","CTTC")]},
+  monge:{nome:"Monge",dv:8,saves:["for","des"],arm:0,unarm:"sab",subs:[S("Caminho da Mão Aberta","LDJ"),S("Caminho da Sombra","LDJ"),S("Caminho dos Quatro Elementos","LDJ"),S("Caminho do Kensei","GXTC"),S("Caminho do Mestre Bêbado","GXTC"),S("Caminho da Alma Solar","GXTC"),S("Caminho da Misericórdia","CTTC"),S("Caminho do Eu Astral","CTTC")]},
+  paladino:{nome:"Paladino",dv:10,saves:["sab","car"],arm:3,escudo:true,cast:"half",key:"car",subs:[S("Juramento de Devoção","LDJ"),S("Juramento dos Anciões","LDJ"),S("Juramento de Vingança","LDJ"),S("Quebrador de Juramento","LDM"),S("Juramento de Conquista","GXTC"),S("Juramento de Redenção","GXTC"),S("Juramento de Glória","CTTC"),S("Juramento dos Vigilantes","CTTC")]},
+  patrulheiro:{nome:"Patrulheiro",dv:10,saves:["for","des"],arm:2,escudo:true,cast:"half",key:"sab",subs:[S("Caçador","LDJ"),S("Mestre das Feras","LDJ"),S("Perseguidor Sombrio","GXTC"),S("Andarilho do Horizonte","GXTC"),S("Matador de Monstros","GXTC"),S("Peregrino Feérico","CTTC"),S("Guardião do Enxame","CTTC")]}
+};
+const THIRD={"Cavaleiro Arcano":1,"Trapaceiro Arcano":1};
+/* nível de classe em que a subclasse é escolhida */
+const UNLOCK={clerigo:1,feiticeiro:1,bruxo:1,mago:2,druida:2};
+const unlock=c=>UNLOCK[c]||3;
+/* armaduras ganhas ao entrar na classe por multiclasse: 0 nenhuma, 1 leve, 2 média */
+const MC_ARM={guerreiro:2,paladino:2,patrulheiro:2,clerigo:2,druida:2,artifice:2,bardo:1,ladino:1,bruxo:1};
+/* pré-requisitos de multiclasse: cada grupo exige 13 em pelo menos um dos atributos */
+const PREREQ={artifice:[["int"]],barbaro:[["for"]],bardo:[["car"]],clerigo:[["sab"]],druida:[["sab"]],guerreiro:[["for","des"]],monge:[["des"],["sab"]],paladino:[["for"],["car"]],patrulheiro:[["des"],["sab"]],ladino:[["des"]],feiticeiro:[["car"]],bruxo:[["car"]],mago:[["int"]]};
+/* espaços por nível de conjurador (tabela de multiclasse do LDJ) */
+const SL={1:[2],2:[3],3:[4,2],4:[4,3],5:[4,3,2],6:[4,3,3],7:[4,3,3,1],8:[4,3,3,2],9:[4,3,3,3,1],10:[4,3,3,3,2],11:[4,3,3,3,2,1],12:[4,3,3,3,2,1]};
+/* magia de pacto por nível de bruxo: [espaços, círculo] */
+const PACT={1:[1,1],2:[2,1],3:[2,2],4:[2,2],5:[2,3],6:[2,3],7:[2,4],8:[2,4],9:[2,5],10:[2,5],11:[3,5],12:[3,5]};
+const ORD=["1º","2º","3º","4º","5º","6º"];
+const RACAS=[
+  {id:"anao-colina",nome:"Anão da Colina",livro:"LDJ",modo:"flex",desl:25,pvNivel:1},
+  {id:"anao-montanha",nome:"Anão da Montanha",livro:"LDJ",modo:"flex",desl:25,armExtra:2},
+  {id:"alto-elfo",nome:"Alto Elfo",livro:"LDJ",modo:"flex",desl:30},
+  {id:"elfo-floresta",nome:"Elfo da Floresta",livro:"LDJ",modo:"flex",desl:35},
+  {id:"drow",nome:"Elfo Negro (Drow)",livro:"LDJ",modo:"flex",desl:30},
+  {id:"eladrin",nome:"Eladrin",livro:"LDM",modo:"flex",desl:30},
+  {id:"halfling-pl",nome:"Halfling Pés-Leves",livro:"LDJ",modo:"flex",desl:25},
+  {id:"halfling-rob",nome:"Halfling Robusto",livro:"LDJ",modo:"flex",desl:25},
+  {id:"humano",nome:"Humano",livro:"LDJ",modo:"humano",desl:30},
+  {id:"humano-var",nome:"Humano Variante",livro:"LDJ",modo:"variante",desl:30},
+  {id:"draconato",nome:"Draconato",livro:"LDJ",modo:"flex",desl:30},
+  {id:"gnomo-floresta",nome:"Gnomo da Floresta",livro:"LDJ",modo:"flex",desl:25},
+  {id:"gnomo-rochas",nome:"Gnomo das Rochas",livro:"LDJ",modo:"flex",desl:25},
+  {id:"meio-elfo",nome:"Meio-Elfo",livro:"LDJ",modo:"meioelfo",desl:30},
+  {id:"meio-orc",nome:"Meio-Orc",livro:"LDJ",modo:"flex",desl:30},
+  {id:"tiefling",nome:"Tiefling",livro:"LDJ",modo:"flex",desl:30},
+  {id:"aasimar",nome:"Aasimar",livro:"LDM",modo:"flex",desl:30},
+  {id:"linhagem",nome:"Linhagem Personalizada",livro:"CTTC",modo:"linhagem",desl:30}
+];
+const MODOS={
+  flex:{slots:[2,1],talento:false,hint:"Pela regra de origem do Caldeirão de Tasha, você distribui +2 e +1 em quaisquer atributos."},
+  meioelfo:{slots:[2,1,1],talento:false,hint:"Meio-elfo: +2, +1 e +1 em três atributos diferentes (regra de origem do Caldeirão de Tasha)."},
+  humano:{slots:null,talento:false,hint:"Humano: +1 em todos os atributos."},
+  variante:{slots:[1,1],talento:true,hint:"Humano variante: +1 em dois atributos diferentes e um talento."},
+  linhagem:{slots:[2],talento:true,hint:"Linhagem personalizada: +2 em um atributo e um talento."}
+};
+const TENDENCIAS=["Leal e Bom","Neutro e Bom","Caótico e Bom","Leal e Neutro","Neutro","Caótico e Neutro","Leal e Mau","Neutro e Mau","Caótico e Mau"];
+const PERICIAS=[["acrobacia","Acrobacia","des"],["adestrar","Adestrar Animais","sab"],["arcanismo","Arcanismo","int"],["atletismo","Atletismo","for"],["atuacao","Atuação","car"],["enganacao","Enganação","car"],["furtividade","Furtividade","des"],["historia","História","int"],["intimidacao","Intimidação","car"],["intuicao","Intuição","sab"],["investigacao","Investigação","int"],["medicina","Medicina","sab"],["natureza","Natureza","int"],["percepcao","Percepção","sab"],["persuasao","Persuasão","car"],["prestidigitacao","Prestidigitação","des"],["religiao","Religião","int"],["sobrevivencia","Sobrevivência","sab"]];
+const PNOME=Object.fromEntries(PERICIAS.map(x=>[x[0],x[1]]));
+const TODAS=PERICIAS.map(x=>x[0]);
+const BG_PER={"Acólito":["intuicao","religiao"],"Artesão de Guilda":["intuicao","persuasao"],"Artista":["acrobacia","atuacao"],"Charlatão":["enganacao","prestidigitacao"],"Criminoso":["enganacao","furtividade"],"Eremita":["medicina","religiao"],"Forasteiro":["atletismo","sobrevivencia"],"Herói do Povo":["adestrar","sobrevivencia"],"Marinheiro":["atletismo","percepcao"],"Nobre":["historia","persuasao"],"Órfão":["prestidigitacao","furtividade"],"Sábio":["arcanismo","historia"],"Soldado":["atletismo","intimidacao"]};
+const CL_PER={
+  artifice:[2,["arcanismo","historia","investigacao","medicina","natureza","percepcao","prestidigitacao"]],
+  barbaro:[2,["adestrar","atletismo","intimidacao","natureza","percepcao","sobrevivencia"]],
+  bardo:[3,TODAS],
+  bruxo:[2,["arcanismo","enganacao","historia","intimidacao","investigacao","natureza","religiao"]],
+  clerigo:[2,["historia","intuicao","medicina","persuasao","religiao"]],
+  druida:[2,["arcanismo","adestrar","intuicao","medicina","natureza","percepcao","religiao","sobrevivencia"]],
+  feiticeiro:[2,["arcanismo","enganacao","intuicao","intimidacao","persuasao","religiao"]],
+  guerreiro:[2,["acrobacia","adestrar","atletismo","historia","intuicao","intimidacao","percepcao","sobrevivencia"]],
+  ladino:[4,["acrobacia","atletismo","enganacao","intuicao","intimidacao","investigacao","percepcao","atuacao","persuasao","prestidigitacao","furtividade"]],
+  mago:[2,["arcanismo","historia","intuicao","investigacao","medicina","religiao"]],
+  monge:[2,["acrobacia","atletismo","historia","intuicao","religiao","furtividade"]],
+  paladino:[2,["atletismo","intuicao","intimidacao","medicina","persuasao","religiao"]],
+  patrulheiro:[3,["adestrar","atletismo","intuicao","investigacao","natureza","percepcao","furtividade","sobrevivencia"]]
+};
+const BG_CARAC={"Acólito":"Abrigo dos Fiéis","Artesão de Guilda":"Membro de Guilda","Artista":"Por Demanda Popular","Charlatão":"Identidade Falsa","Criminoso":"Contato Criminoso","Eremita":"Descoberta","Forasteiro":"Andarilho","Herói do Povo":"Hospitalidade Rústica","Marinheiro":"Passagem de Navio","Nobre":"Posição Privilegiada","Órfão":"Segredos da Cidade","Sábio":"Pesquisador","Soldado":"Patente Militar"};
+const PERS="Personalizado";
+const nomeAnt=()=>st.antecedente===PERS?(st.antPers.nome.trim()||"Antecedente personalizado"):st.antecedente;
+const caracAnt=()=>st.antecedente===PERS?st.antPers.carac:BG_CARAC[st.antecedente];
+const MC_PER={bardo:1,patrulheiro:1,ladino:1};
+const RACA_PER={"alto-elfo":["percepcao"],"elfo-floresta":["percepcao"],"drow":["percepcao"],"eladrin":["percepcao"],"meio-orc":["intimidacao"]};
+const RACA_ESC={"meio-elfo":2,"humano-var":1,"linhagem":1};
+const ANTECEDENTES=["Acólito","Artesão de Guilda","Artista","Charlatão","Criminoso","Eremita","Forasteiro","Herói do Povo","Marinheiro","Nobre","Órfão","Sábio","Soldado","Personalizado"];
+const ARMS=[
+  {id:"nenhuma",nome:"Sem armadura",t:0},
+  {id:"couro",nome:"Couro (leve)",t:1,b:11},
+  {id:"couro-batido",nome:"Couro batido (leve)",t:1,b:12},
+  {id:"camisao",nome:"Camisão de malha (média)",t:2,b:13,max:2},
+  {id:"peitoral",nome:"Peitoral (média)",t:2,b:14,max:2},
+  {id:"meia",nome:"Meia-armadura (média)",t:2,b:15,max:2},
+  {id:"cota-malha",nome:"Cota de malha (pesada)",t:3,b:16,max:0},
+  {id:"talas",nome:"Cota de talas (pesada)",t:3,b:17,max:0},
+  {id:"placas",nome:"Placas (pesada)",t:3,b:18,max:0}
+];
+const PB={8:0,9:1,10:2,11:3,12:4,13:5,14:7,15:9};
+const PADRAO=[15,14,13,12,10,8];
+
+/* ---------- estado ---------- */
+const DEF=()=>({adv:null,nivel:null,nomePers:"",nomeJog:"",antecedente:"Forasteiro",raca:"humano-var",asi:["des","con"],talentoRaca:"",
+  classes:[{c:"guerreiro",s:"Campeão",n:3}],proxima:"guerreiro",proximaSub:"",armadura:"cota-malha",escudo:true,metodo:"compra",
+  compra:{for:15,des:13,con:14,int:8,sab:12,car:10},padrao:{for:"",des:"",con:"",int:"",sab:"",car:""},rolados:null,tendencia:"Neutro",antPers:{nome:"",pericias:[],prof:"",carac:"Andarilho"},pericias:{raca:[],classe:[],mc:{},esp:[]},det:{pers:"",ideais:"",vinc:"",def:"",equip:"",idiomas:"",carac:"",ataques:[{n:"",b:"",d:""},{n:"",b:"",d:""},{n:"",b:"",d:""}]},verFicha:"inicio",rolAtrib:{for:"",des:"",con:"",int:"",sab:"",car:""},vezesRolado:0,magias:{},
+  sobe:{tipo:"atributo",a:"for",b:"con",talento:""}});
+let st=DEF();
+let view="aventura";
+const LS="tres-noites-rascunho";
+function migrar(o){
+  const s=Object.assign(DEF(),o);
+  if(o&&o.classe&&!o.classes)s.classes=[{c:o.classe,s:o.subclasse||"",n:o.nivel||3}];
+  delete s.classe;delete s.subclasse;delete s.rolagem;
+  if(!["compra","padrao","aleatorio"].includes(s.metodo))s.metodo="compra";
+  const d=DEF();
+  s.pericias=Object.assign(d.pericias,s.pericias||{});s.antPers=Object.assign(d.antPers,s.antPers||{});s.det=Object.assign(d.det,s.det||{});
+  if(!Array.isArray(s.det.ataques))s.det.ataques=d.det.ataques;
+  if(!Array.isArray(s.classes)||!s.classes.length)s.classes=DEF().classes;
+  return s;
+}
+try{const raw=localStorage.getItem(LS);if(raw)st=migrar(JSON.parse(raw))}catch(e){}
+const saveDraft=()=>{try{localStorage.setItem(LS,JSON.stringify(st))}catch(e){}};
+
+/* ---------- cálculos ---------- */
+const mod=v=>Math.floor((v-10)/2);
+const sg=n=>(n>=0?"+":"")+n;
+const prof=l=>l>=9?4:l>=5?3:2;
+function baseScores(){
+  if(st.metodo==="compra")return {...st.compra};
+  if(st.metodo==="padrao"){const o={};for(const a of AB)o[a]=Number(st.padrao[a])||8;return o}
+  if(st.metodo==="aleatorio"){const o={};for(const a of AB){const i=st.rolAtrib[a];o[a]=st.rolados&&i!==""&&st.rolados[i]?st.rolados[i].total:8}return o}
+  return {...st.compra};
+}
+function racial(){
+  const r=RACAS.find(x=>x.id===st.raca)||RACAS[0];const m=MODOS[r.modo];const o={for:0,des:0,con:0,int:0,sab:0,car:0};
+  if(!m.slots){for(const a of AB)o[a]=1;return o}
+  m.slots.forEach((v,i)=>{const a=st.asi[i];if(a)o[a]+=v});return o;
+}
+function asiLevel(cls,l){return l===4||l===8||l===12||l===16||l===19||(cls==="guerreiro"&&(l===6||l===14))||(cls==="ladino"&&l===10)}
+/* lista de classes no nível inicial ou depois da subida */
+function rowsAt(next){
+  const rows=st.classes.map(r=>({...r}));
+  if(next){
+    const r=rows.find(x=>x.c===st.proxima);
+    if(r)r.n++;else rows.push({c:st.proxima,s:st.proximaSub,n:1});
+  }
+  return rows;
+}
+const nivelProxima=()=>{const r=st.classes.find(x=>x.c===st.proxima);return r?r.n+1:1};
+const temSub=r=>r.n>=unlock(r.c)&&r.s;
+const resumoClasses=rows=>rows.map(r=>`${CLASSES[r.c].nome} ${r.n}`+(temSub(r)?` (${r.s})`:"")).join(" / ");
+function scoresAt(withUp){
+  const b=baseScores(),r=racial(),o={};
+  for(const a of AB)o[a]=Math.min(20,b[a]+r[a]);
+  if(withUp&&asiLevel(st.proxima,nivelProxima())&&st.sobe.tipo==="atributo"){
+    o[st.sobe.a]=Math.min(20,o[st.sobe.a]+1);o[st.sobe.b]=Math.min(20,o[st.sobe.b]+1);
+  }
+  return o;
+}
+function profArmadura(rows){
+  const r=RACAS.find(x=>x.id===st.raca);
+  let arm=CLASSES[rows[0].c].arm,esc=!!CLASSES[rows[0].c].escudo;
+  rows.slice(1).forEach(x=>{arm=Math.max(arm,MC_ARM[x.c]||0);if(CLASSES[x.c].escudo)esc=true});
+  if(r&&r.armExtra)arm=Math.max(arm,r.armExtra);
+  return {arm,esc};
+}
+function calc(l,withUp){
+  const rows=rowsAt(withUp),first=CLASSES[rows[0].c],r=RACAS.find(x=>x.id===st.raca)||RACAS[0],sc=scoresAt(withUp),m={};
+  for(const a of AB)m[a]=mod(sc[a]);
+  /* PV: dado máximo só no 1º nível da classe inicial; médias no resto */
+  let pv=0;
+  rows.forEach((x,i)=>{const dv=CLASSES[x.c].dv,med=dv/2+1;pv+=i===0?dv+m.con+(x.n-1)*(med+m.con):x.n*(med+m.con)});
+  if(r.pvNivel)pv+=l;
+  const drac=rows.find(x=>x.c==="feiticeiro"&&x.s==="Linhagem Dracônica");
+  if(drac)pv+=drac.n;
+  /* CA */
+  const pa=profArmadura(st.classes);let arm=ARMS.find(a=>a.id===st.armadura)||ARMS[0];if(arm.t>pa.arm)arm=ARMS[0];
+  const has=c=>rows.some(x=>x.c===c),escudo=st.escudo&&pa.esc;
+  let ca;
+  if(arm.t===0){
+    if(has("barbaro"))ca=10+m.des+m.con;
+    else if(has("monge")&&!escudo)ca=10+m.des+m.sab;
+    else if(drac)ca=13+m.des;
+    else ca=10+m.des;
+  }else{const dx=arm.max===undefined?m.des:Math.min(m.des,arm.max);ca=arm.b+dx}
+  if(escudo)ca+=2;
+  const p=prof(l);
+  /* magia */
+  const conj=[],dcs=[];let pacto=null;
+  for(const x of rows){
+    const c=CLASSES[x.c];let tipo=c.cast;
+    if(!tipo&&THIRD[x.s]&&x.n>=3)tipo="third";
+    if(!tipo)continue;
+    const key=c.key||"int";
+    if(tipo==="half"&&x.n<2)continue;
+    dcs.push(`${c.nome}: CD ${8+p+m[key]}, ataque ${sg(p+m[key])} (${ABL[key]})`);
+    if(tipo==="pact")pacto=PACT[x.n];else conj.push({tipo,n:x.n});
+  }
+  let espacos="";
+  if(conj.length){
+    let nc;
+    if(conj.length===1){const k=conj[0];nc=k.tipo==="full"?k.n:k.tipo==="third"?Math.ceil(k.n/3):Math.ceil(k.n/2)}
+    else nc=conj.reduce((s,k)=>s+(k.tipo==="full"?k.n:k.tipo==="half"?Math.floor(k.n/2):k.tipo==="art"?Math.ceil(k.n/2):Math.floor(k.n/3)),0);
+    const sl=SL[Math.max(1,Math.min(12,nc))];
+    if(nc>0)espacos=sl.map((n,i)=>`${ORD[i]}: ${n}`).join(" · ");
+  }
+  const magia=dcs.length?{dcs,espacos,pacto:pacto?`${pacto[0]} espaço(s) de ${ORD[pacto[1]-1]} círculo, recuperados em descanso curto`:""}:null;
+  return {rows,sc,m,pv,ca,p,magia,desl:r.desl,saves:first.saves};
+}
+function avisosMulticlasse(){
+  const rowsN=rowsAt(true);
+  if(rowsN.length<2)return [];
+  const b=baseScores(),r=racial(),sc={};for(const a of AB)sc[a]=b[a]+r[a];
+  const av=[];
+  for(const x of rowsN){
+    const falta=(PREREQ[x.c]||[]).filter(g=>!g.some(a=>sc[a]>=13));
+    if(falta.length)av.push(`${CLASSES[x.c].nome} pede 13 em ${falta.map(g=>g.map(a=>ABL[a]).join(" ou ")).join(" e ")}.`);
+  }
+  return av;
+}
+
+/* ---------- etapas ---------- */
+const ORDEM=[["aventura","Aventura"],["nivel","Nível"],["briefing","Chamado"],["ficha","Ficha"]];
+function renderSteps(){
+  const ol=$("#steps");ol.replaceChildren();
+  const idx=ORDEM.findIndex(o=>o[0]===view);
+  ORDEM.forEach(([k,n],i)=>{const li=el("li",{class:i===idx?"on":i<idx?"done":""},el("b",{text:String(i+1)}),n);ol.append(li)});
+}
+function go(v){
+  if(v==="nivel"&&!st.adv)v="aventura";
+  if((v==="briefing"||v==="ficha")&&(!st.adv||!st.nivel))v=st.adv?"nivel":"aventura";
+  view=v;
+  for(const s of document.querySelectorAll(".view"))s.hidden=s.id!=="v-"+v;
+  document.body.dataset.adv=st.adv||"forja";
+  renderSteps();
+  if(v==="nivel")renderNivel();
+  if(v==="briefing")renderBriefing();
+  if(v==="ficha")renderFicha();
+  window.scrollTo({top:0});
+}
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g){e.preventDefault();go(g.dataset.go)}});
+
+/* aventura */
+function renderAdvs(){
+  const box=$("#advList");box.replaceChildren();
+  for(const[k,a]of Object.entries(ADV)){
+    const b=el("button",{class:"adv",type:"button",style:`--c:var(--${k})`},
+      el("span",{class:"tone",text:a.tom}),el("h3",{text:a.nome}),el("p",{text:a.resumo}),el("span",{class:"meta",text:"Local: "+a.local}));
+    b.addEventListener("click",()=>{st.adv=k;saveDraft();go("nivel")});
+    box.append(b);
+  }
+}
+function renderNivel(){
+  $("#nivelTitle").textContent=ADV[st.adv].nome;
+  const box=$("#lvlList");box.replaceChildren();
+  for(const[n,i]of Object.entries(NIVEIS)){
+    const b=el("button",{class:"lvl",type:"button"},el("span",{class:"n",text:"Nível "+n}),el("span",{class:"who",text:i.rotulo}),el("span",{class:"d",text:i.desc}),el("span",{class:"d",text:`Você sobe para o nível ${Number(n)+1} antes do confronto final.`}));
+    b.addEventListener("click",()=>{st.nivel=Number(n);saveDraft();go("briefing")});
+    box.append(b);
+  }
+}
+function renderBriefing(){
+  const a=ADV[st.adv],n=NIVEIS[st.nivel];
+  $("#brEyebrow").textContent=`${a.tom} · Nível ${st.nivel} · ${n.rotulo}`;
+  $("#brTitle").textContent=a.nome;
+  const t=$("#brText");t.replaceChildren();
+  for(const p of a.briefing)t.append(el("p",{text:"“"+p+"”"}));
+  t.append(el("p",{class:"who",text:"— "+a.quem}));
+  const c=$("#brContract");c.replaceChildren(
+    el("div",{},el("dt",{text:"Contrato"}),el("dd",{text:n.metal[0].toUpperCase()+n.metal.slice(1)})),
+    el("div",{},el("dt",{text:"Adiantamento"}),el("dd",{text:n.adiant.toLocaleString("pt-BR")+" po"})),
+    el("div",{},el("dt",{text:"Pagamento final"}),el("dd",{text:n.contrato.toLocaleString("pt-BR")+" po"})));
+  for(const d of c.children)d.append(el("p",{class:"hint",text:"por personagem"}));
+}
+
+/* ---------- ficha ---------- */
+function fillSelect(s,opts,val){s.replaceChildren();for(const o of opts){const op=el("option",{value:o.v,text:o.t});if(o.g)op.dataset.g=o.g;s.append(op)}s.value=val;if((!s.value||s.value!==val)&&s.options.length)s.value=s.options[0].value;return s.value}
+function renderFicha(){
+  $("#fiEyebrow").textContent=`${ADV[st.adv].nome} · Nível ${st.nivel} → ${st.nivel+1}`;
+  $("#nomePers").value=st.nomePers;$("#nomeJog").value=st.nomeJog;
+  fillSelect($("#antecedente"),ANTECEDENTES.map(x=>({v:x,t:x+" (LDJ)"})),st.antecedente);
+  fillSelect($("#tendencia"),TENDENCIAS.map(x=>({v:x,t:x})),st.tendencia);
+  renderAntPers();
+  renderDetalhes();
+  fillSelect($("#raca"),RACAS.map(r=>({v:r.id,t:`${r.nome} (${r.livro})`})),st.raca);
+  ajustarNiveis();
+  renderClasses();renderAsi();renderAbil();renderPericias();renderAsiNext();renderMagias();renderSheet();updateSaveUi();
+}
+const somaNiveis=()=>st.classes.reduce((s,r)=>s+(Number(r.n)||0),0);
+function ajustarNiveis(){
+  if(st.classes.length===1)st.classes[0].n=st.nivel;
+  else{
+    const outros=st.classes.slice(1).reduce((s,r)=>s+r.n,0);
+    if(st.nivel-outros>=1)st.classes[0].n=st.nivel-outros;
+  }
+  if(!st.classes.some(r=>r.c===st.proxima)&&!CLASSES[st.proxima])st.proxima=st.classes[0].c;
+}
+function opcoesClasse(atual){
+  const usadas=st.classes.map(r=>r.c).filter(c=>c!==atual);
+  return Object.entries(CLASSES).filter(([k])=>!usadas.includes(k)).map(([k,c])=>({v:k,t:c.nome+(c.livro?` (${c.livro})`:"")}));
+}
+function opcoesSub(c,n){
+  const u=unlock(c),antes=n<u;
+  return CLASSES[c].subs.map(s=>({v:s.nome,t:`${s.nome} (${s.livro})`+(antes?` · a partir do nível ${u}`:"")}));
+}
+function renderClasses(){
+  const box=$("#classRows");box.replaceChildren();
+  st.classes.forEach((r,i)=>{
+    const cs=el("select",{id:"cl-c"+i});r.c=fillSelect(cs,opcoesClasse(r.c),r.c);
+    const ss=el("select",{id:"cl-s"+i});r.s=fillSelect(ss,opcoesSub(r.c,r.n),r.s);
+    const nn=el("input",{type:"number",id:"cl-n"+i,min:"1",max:String(st.nivel)});nn.value=r.n;
+    if(st.classes.length===1)nn.disabled=true;
+    cs.addEventListener("change",()=>{const antiga=r.c;r.c=cs.value;r.s="";if(st.proxima===antiga)st.proxima=r.c;renderClasses();changed()});
+    ss.addEventListener("change",()=>{r.s=ss.value;changed()});
+    nn.addEventListener("change",()=>{r.n=Math.max(1,Math.min(st.nivel,Math.round(Number(nn.value)||1)));renderClasses();changed()});
+    const row=el("div",{class:"crow"},
+      el("label",{class:"f"},i===0?"Classe inicial":"Multiclasse",cs),
+      el("label",{class:"f"},"Subclasse",ss),
+      el("label",{class:"f"},"Níveis",nn));
+    if(i>0){
+      const rm=el("button",{type:"button",class:"rm",text:"Remover"});
+      rm.addEventListener("click",()=>{st.classes.splice(i,1);st.classes[0].n+=r.n;if(st.proxima===r.c)st.proxima=st.classes[0].c;renderClasses();changed()});
+      row.append(rm);
+    }else row.append(el("span"));
+    box.append(row);
+  });
+  const soma=somaNiveis(),t=$("#classTotal");
+  t.textContent=`${soma} de ${st.nivel} níveis distribuídos`;t.className="budget"+(soma!==st.nivel?" bad":"");
+  $("#addClass").disabled=st.classes.length>=st.nivel||!st.classes.some(r=>r.n>1);
+  const av=avisosMulticlasse(),w=$("#classWarn");
+  w.hidden=!av.length;w.textContent=av.length?"Pré-requisito de multiclasse não atendido: "+av.join(" ")+" Combine com o mestre.":"";
+  const pa=profArmadura(st.classes);
+  st.armadura=fillSelect($("#armadura"),ARMS.filter(a=>a.t<=pa.arm).map(a=>({v:a.id,t:a.nome})),st.armadura);
+  $("#escudoWrap").hidden=!pa.esc;$("#escudo").checked=!!st.escudo&&pa.esc;
+}
+$("#addClass").addEventListener("click",()=>{
+  const doador=st.classes.reduce((a,b)=>b.n>a.n?b:a);
+  if(doador.n<2)return;
+  const livre=Object.keys(CLASSES).find(k=>!st.classes.some(r=>r.c===k));
+  doador.n--;st.classes.push({c:livre,s:"",n:1});
+  renderClasses();changed();
+});
+function abSelect(id,val,exclude){
+  const s=el("select",{id});
+  for(const a of AB){const o=el("option",{value:a,text:ABL[a]});if(exclude.includes(a))o.disabled=true;s.append(o)}
+  s.value=val;return s;
+}
+function renderAsi(){
+  const r=RACAS.find(x=>x.id===st.raca)||RACAS[0],m=MODOS[r.modo],box=$("#asiBox");box.replaceChildren();
+  $("#racaHint").textContent=m.hint+` Deslocamento ${r.desl} pés.`+(r.pvNivel?" +1 PV por nível.":"")+(r.armExtra?" Proficiência em armaduras médias.":"");
+  if(m.slots){
+    st.asi=st.asi.slice(0,m.slots.length);
+    m.slots.forEach((v,i)=>{
+      if(!st.asi[i]||st.asi.indexOf(st.asi[i])!==i)st.asi[i]=AB.find(a=>!st.asi.includes(a));
+      const others=st.asi.filter((_,j)=>j!==i);
+      const s=abSelect("asi"+i,st.asi[i],others);
+      s.addEventListener("change",()=>{st.asi[i]=s.value;renderAsi();changed()});
+      box.append(el("label",{class:"f"},`Bônus +${v}`,s));
+    });
+  }
+  if(m.talento){
+    const inp=el("input",{type:"text",id:"talentoRaca",maxlength:"60",placeholder:"Ex.: Sentinela, Sortudo, Tocado por Fadas"});
+    inp.value=st.talentoRaca;inp.addEventListener("input",()=>{st.talentoRaca=inp.value;saveDraft()});
+    box.append(el("label",{class:"f"},"Talento de origem",inp));
+  }
+}
+const MIN_ROLAGEM=11; /* resultados de 10 ou menos são rolados de novo */
+function rolar4d6(){
+  for(;;){
+    const buf=new Uint32Array(4);crypto.getRandomValues(buf);
+    const dados=[...buf].map(v=>v%6+1),menor=Math.min(...dados);
+    const total=dados.reduce((a,b)=>a+b,0)-menor;
+    if(total>=MIN_ROLAGEM)return {dados,total};
+  }
+}
+function renderRolagem(box,r){
+  const rb=$("#rollBox");rb.hidden=false;rb.replaceChildren();
+  const btn=el("button",{type:"button",class:"btn",id:"rolarBtn"},el("span",{text:st.rolados?"Rolar de novo":"Rolar 4d6 seis vezes"}));
+  btn.addEventListener("click",()=>{
+    st.rolados=Array.from({length:6},rolar4d6);st.vezesRolado=(st.vezesRolado||0)+1;
+    for(const a of AB)st.rolAtrib[a]="";renderAbil();changed();
+  });
+  const info=el("span",{class:"hint",text:st.vezesRolado?`Rolado ${st.vezesRolado} vez(es). O mestre vê esse número na inscrição.`:""});
+  rb.append(el("div",{class:"btnrow"},btn,info));
+  $("#metodoHint").textContent="Cada valor é a soma dos três maiores de 4d6. Resultados de 10 ou menos são rolados de novo automaticamente, então todo atributo sai entre 11 e 18. Depois de rolar, distribua os seis resultados entre os atributos.";
+  if(!st.rolados)return;
+  const usados=Object.values(st.rolAtrib).filter(v=>v!=="").map(Number);
+  const chips=el("div",{class:"rolls",style:"margin-top:10px"});
+  st.rolados.forEach((x,i)=>{
+    const menor=Math.min(...x.dados);let cortado=false;
+    const d=el("span");x.dados.forEach((v,j)=>{if(j)d.append(" ");if(v===menor&&!cortado){cortado=true;d.append(el("s",{text:String(v)}))}else d.append(String(v))});
+    chips.append(el("div",{class:"roll"+(usados.includes(i)?" used":"")},el("b",{text:String(x.total)}),d));
+  });
+  rb.append(chips);
+  for(const a of AB){
+    const s=el("select",{id:"ra-"+a,"aria-label":ABL[a]});s.append(el("option",{value:"",text:"—"}));
+    const meu=st.rolAtrib[a];
+    st.rolados.forEach((x,i)=>{if(!usados.includes(i)||String(meu)===String(i))s.append(el("option",{value:String(i),text:String(x.total)}))});
+    s.value=String(meu);
+    s.addEventListener("change",()=>{st.rolAtrib[a]=s.value===""?"":Number(s.value);renderAbil();changed()});
+    box.append(el("div",{class:"ab"},el("span",{class:"k",text:ABN[a]}),s,el("span",{class:"hint",text:r[a]?`+${r[a]} raça`:"\u00a0"})));
+  }
+}
+function renderAbil(){
+  $("#rollBox").hidden=st.metodo!=="aleatorio";
+  for(const b of $("#metodo").children)b.setAttribute("aria-pressed",String(b.dataset.m===st.metodo));
+  const box=$("#abilBox");box.replaceChildren();const r=racial();
+  if(st.metodo==="compra"){
+    const used=AB.reduce((s,a)=>s+PB[st.compra[a]],0);
+    $("#metodoHint").replaceChildren("27 pontos, valores de 8 a 15 antes dos bônus de raça. Restam ",el("span",{class:"budget"+(used>27?" bad":""),text:String(27-used)})," pontos.");
+    for(const a of AB){
+      const v=st.compra[a];
+      const minus=el("button",{type:"button","aria-label":"Diminuir "+ABL[a],text:"−"}),plus=el("button",{type:"button","aria-label":"Aumentar "+ABL[a],text:"+"});
+      minus.addEventListener("click",()=>{if(st.compra[a]>8){st.compra[a]--;renderAbil();changed()}});
+      plus.addEventListener("click",()=>{const nv=st.compra[a]+1;if(nv<=15&&used-PB[v]+PB[nv]<=27){st.compra[a]=nv;renderAbil();changed()}});
+      box.append(el("div",{class:"ab"},el("span",{class:"k",text:ABN[a]}),el("span",{class:"v",text:String(v)}),el("div",{class:"pb"},minus,plus),el("span",{class:"hint",text:r[a]?`+${r[a]} raça`:" "})));
+    }
+  }else if(st.metodo==="padrao"){
+    $("#metodoHint").textContent="Distribua 15, 14, 13, 12, 10 e 8, um valor para cada atributo.";
+    for(const a of AB){
+      const s=el("select",{id:"pd-"+a,"aria-label":ABL[a]});s.append(el("option",{value:"",text:"—"}));
+      const usados=AB.filter(b=>b!==a).map(b=>String(st.padrao[b]));
+      const livres=[...PADRAO];for(const u of usados){const i=livres.indexOf(Number(u));if(i>=0)livres.splice(i,1)}
+      for(const v of PADRAO){if(livres.includes(v)||String(st.padrao[a])===String(v)){if(!s.querySelector(`option[value="${v}"]`))s.append(el("option",{value:String(v),text:String(v)}))}}
+      s.value=String(st.padrao[a]);
+      s.addEventListener("change",()=>{st.padrao[a]=s.value;renderAbil();changed()});
+      box.append(el("div",{class:"ab"},el("span",{class:"k",text:ABN[a]}),s,el("span",{class:"hint",text:r[a]?`+${r[a]} raça`:" "})));
+    }
+  }else if(st.metodo==="aleatorio"){
+    renderRolagem(box,r);
+  }
+}
+function renderAsiNext(){
+  const box=$("#asiNextBox"),nx=st.nivel+1;
+  box.querySelectorAll(":scope > :not(legend)").forEach(n=>n.remove());
+  $("#asiNextLegend").textContent=`Subida para o nível ${nx}`;
+  /* qual classe recebe o nível */
+  const sel=el("select",{id:"proxima"});
+  const atuais=el("optgroup",{label:"Classes que você já tem"}),novas=el("optgroup",{label:"Nova classe (multiclasse)"});
+  for(const r of st.classes)atuais.append(el("option",{value:r.c,text:`${CLASSES[r.c].nome} (vai para o nível ${r.n+1})`}));
+  for(const[k,c]of Object.entries(CLASSES))if(!st.classes.some(r=>r.c===k))novas.append(el("option",{value:k,text:c.nome+(c.livro?` (${c.livro})`:"")}));
+  sel.append(atuais,novas);sel.value=st.proxima;if(sel.value!==st.proxima){st.proxima=st.classes[0].c;sel.value=st.proxima}
+  sel.addEventListener("change",()=>{st.proxima=sel.value;st.proximaSub="";renderClasses();changed()});
+  box.append(el("label",{class:"f"},"O novo nível vai para",sel));
+  const nova=!st.classes.some(r=>r.c===st.proxima),cn=nivelProxima();
+  if(nova&&unlock(st.proxima)===1){
+    const ss=el("select",{id:"proximaSub"});st.proximaSub=fillSelect(ss,opcoesSub(st.proxima,1),st.proximaSub);
+    ss.addEventListener("change",()=>{st.proximaSub=ss.value;changed()});
+    box.append(el("label",{class:"f"},`Subclasse de ${CLASSES[st.proxima].nome}`,ss));
+  }else if(!nova&&cn===unlock(st.proxima)){
+    const r=st.classes.find(x=>x.c===st.proxima);
+    box.append(el("p",{class:"hint",text:`No nível ${cn} de ${CLASSES[st.proxima].nome} você ganha a subclasse escolhida acima (${r.s||"escolha uma"}).`}));
+  }
+  const has=asiLevel(st.proxima,cn);
+  if(!has){box.append(el("p",{class:"hint",text:`No nível ${cn} de ${CLASSES[st.proxima].nome} você ganha PV, bônus e habilidades novas, mas não aumento de atributo. Confira no livro da classe o que muda.`}));return}
+  const seg=el("div",{class:"seg",role:"group","aria-label":"Escolha do nível"});
+  for(const[k,n]of[["atributo","Aumento de atributo"],["talento","Talento"]]){
+    const b=el("button",{type:"button","aria-pressed":String(st.sobe.tipo===k),text:n});
+    b.addEventListener("click",()=>{st.sobe.tipo=k;renderAsiNext();changed()});seg.append(b);
+  }
+  box.append(el("p",{class:"hint",text:`No nível ${cn} de ${CLASSES[st.proxima].nome} você escolhe entre +2 em atributos ou um talento.`}),seg);
+  if(st.sobe.tipo==="atributo"){
+    const a=abSelect("sobeA",st.sobe.a,[]),b=abSelect("sobeB",st.sobe.b,[]);
+    a.addEventListener("change",()=>{st.sobe.a=a.value;changed()});b.addEventListener("change",()=>{st.sobe.b=b.value;changed()});
+    box.append(el("div",{class:"grid2"},el("label",{class:"f"},"+1 em",a),el("label",{class:"f"},"+1 em (repita para +2 no mesmo)",b)));
+  }else{
+    const i=el("input",{type:"text",id:"sobeTalento",maxlength:"60",placeholder:"Ex.: Mestre em Armas Grandes"});i.value=st.sobe.talento;
+    i.addEventListener("input",()=>{st.sobe.talento=i.value;saveDraft()});
+    box.append(el("label",{class:"f"},"Talento",i));
+  }
+}
+function col(l,next){
+  const k=calc(l,next),cls=el("div",{class:"col"+(next?" next":"")});
+  cls.append(el("h3",{},`Nível ${l}`,el("span",{class:"tag",text:next?"no confronto final":"no começo"})));
+  cls.append(el("p",{class:"note",text:resumoClasses(k.rows)}));
+  cls.append(el("div",{class:"stats"},
+    el("div",{class:"stat"},el("div",{class:"k",text:"Pontos de vida"}),el("div",{class:"v",text:String(k.pv)})),
+    el("div",{class:"stat"},el("div",{class:"k",text:"Classe de armadura"}),el("div",{class:"v",text:String(k.ca)})),
+    el("div",{class:"stat"},el("div",{class:"k",text:"Proficiência"}),el("div",{class:"v",text:sg(k.p)})),
+    el("div",{class:"stat"},el("div",{class:"k",text:"Iniciativa"}),el("div",{class:"v",text:sg(k.m.des)})),
+    el("div",{class:"stat"},el("div",{class:"k",text:"Deslocamento"}),el("div",{class:"v",text:k.desl+" pés"})),
+    el("div",{class:"stat"},el("div",{class:"k",text:"Dados de vida"}),el("div",{class:"v",style:"font-size:1.05rem",text:k.rows.map(x=>`${x.n}d${CLASSES[x.c].dv}`).join(" + ")}))));
+  const mods=el("div",{class:"mods"});
+  for(const a of AB)mods.append(el("div",{class:k.saves.includes(a)?"sv":""},ABN[a],el("b",{text:String(k.sc[a])}),sg(k.m[a])));
+  cls.append(mods);
+  const sv=k.saves.map(a=>`${ABL[a]} ${sg(k.m[a]+k.p)}`).join(" · ");
+  cls.append(el("p",{class:"note",text:"Resistências proficientes (●): "+sv}));
+  if(k.magia){
+    for(const d of k.magia.dcs)cls.append(el("p",{class:"slots",text:d}));
+    if(k.magia.espacos)cls.append(el("p",{class:"slots"},el("b",{text:"Espaços: "}),k.magia.espacos));
+    if(k.magia.pacto)cls.append(el("p",{class:"slots"},el("b",{text:"Pacto: "}),k.magia.pacto));
+  }
+  if(next&&asiLevel(st.proxima,nivelProxima()))cls.append(el("p",{class:"note",text:st.sobe.tipo==="atributo"?`Aumento escolhido: +1 ${ABL[st.sobe.a]}, +1 ${ABL[st.sobe.b]}.`:`Talento escolhido: ${st.sobe.talento||"a definir"}.`}));
+  return cls;
+}
+/* ---------- perícias ---------- */
+function gruposPericia(){
+  const g=[];
+  if(st.antecedente===PERS)g.push({id:"bg",rotulo:`Antecedente (${nomeAnt()}): à sua escolha`,n:2,opts:TODAS,sel:st.antPers.pericias});
+  else g.push({id:"bg",rotulo:`Antecedente (${st.antecedente})`,fixo:BG_PER[st.antecedente]||[]});
+  if(RACA_PER[st.raca])g.push({id:"racaf",rotulo:"Raça",fixo:RACA_PER[st.raca]});
+  if(RACA_ESC[st.raca])g.push({id:"raca",rotulo:"Raça: à sua escolha",n:RACA_ESC[st.raca],opts:TODAS,sel:st.pericias.raca});
+  const c0=st.classes[0].c,cp=CL_PER[c0];
+  g.push({id:"classe",rotulo:`${CLASSES[c0].nome}: classe inicial`,n:cp[0],opts:cp[1],sel:st.pericias.classe});
+  for(const x of rowsAt(true).slice(1)){
+    if(!MC_PER[x.c])continue;
+    const novo=!st.classes.some(r=>r.c===x.c);
+    const arr=st.pericias.mc[x.c]||(st.pericias.mc[x.c]=[]);
+    g.push({id:"mc-"+x.c,rotulo:`${CLASSES[x.c].nome}: multiclasse${novo?` (no nível ${st.nivel+1})`:""}`,n:MC_PER[x.c],opts:x.c==="bardo"?TODAS:CL_PER[x.c][1],sel:arr,cls:x.c,novo});
+  }
+  return g;
+}
+function espCount(rows){
+  let n=0;for(const x of rows){if(x.c==="ladino")n+=x.n>=6?4:2;if(x.c==="bardo")n+=x.n>=10?4:x.n>=3?2:0}return n;
+}
+function profPericias(next){
+  const set=new Set();
+  for(const g of gruposPericia()){
+    if(g.fixo){g.fixo.forEach(x=>set.add(x));continue}
+    if(g.novo&&!next)continue;
+    g.sel.slice(0,g.n).forEach(x=>set.add(x));
+  }
+  const rows=rowsAt(next),ne=espCount(rows);
+  const esp=new Set(st.pericias.esp.filter(x=>set.has(x)).slice(0,ne));
+  const jack=rows.some(x=>x.c==="bardo"&&x.n>=2);
+  return {prof:set,esp,jack};
+}
+function renderPericias(){
+  const box=$("#periciasBox");box.querySelectorAll(":scope > :not(legend)").forEach(n=>n.remove());
+  const grupos=gruposPericia(),jaFixas=new Set(grupos.filter(g=>g.fixo).flatMap(g=>g.fixo));
+  const outrasEscolhas=g=>new Set(grupos.filter(h=>h!==g&&h.sel).flatMap(h=>h.sel.slice(0,h.n)));
+  for(const g of grupos){
+    const sec=el("div",{class:"skgroup"});
+    if(g.fixo){
+      sec.append(el("p",{class:"note"},el("b",{text:g.rotulo+": "}),g.fixo.map(x=>PNOME[x]).join(", ")));
+      box.append(sec);continue;
+    }
+    const ok=g.sel.filter(x=>g.opts.includes(x)&&!jaFixas.has(x));g.sel.length=0;g.sel.push(...ok);
+    const tomadas=outrasEscolhas(g);
+    sec.append(el("p",{class:"note"},el("b",{text:g.rotulo+": "}),`escolha ${g.n} · ${g.sel.length} escolhida(s)`));
+    const grid=el("div",{class:"skgrid"});
+    for(const id of g.opts){
+      const fixa=jaFixas.has(id)||tomadas.has(id),marcada=g.sel.includes(id);
+      const cb=el("input",{type:"checkbox",id:`pk-${g.id}-${id}`});cb.checked=marcada||fixa;
+      cb.disabled=fixa||(!marcada&&g.sel.length>=g.n);
+      cb.addEventListener("change",()=>{if(cb.checked){if(g.sel.length<g.n)g.sel.push(id)}else{const i=g.sel.indexOf(id);if(i>=0)g.sel.splice(i,1)}changed()});
+      grid.append(el("label",{class:fixa?"fixo":""},cb,PNOME[id]+(fixa&&!marcada?" (já tem)":"")));
+    }
+    sec.append(grid);box.append(sec);
+  }
+  /* especialização */
+  const n0=espCount(rowsAt(false)),n1=espCount(rowsAt(true));
+  if(n1){
+    const pr=profPericias(true).prof;
+    st.pericias.esp=st.pericias.esp.filter(x=>pr.has(x));
+    const sec=el("div",{class:"skgroup"});
+    sec.append(el("p",{class:"note"},el("b",{text:"Especialização: "}),`escolha ${n1}${n0!==n1?` (${n0} agora e mais ${n1-n0} no nível ${st.nivel+1}, na ordem em que marcar)`:""} entre as perícias que você já domina. Dobra o bônus de proficiência.`));
+    const grid=el("div",{class:"skgrid"});
+    for(const id of TODAS.filter(x=>pr.has(x))){
+      const marcada=st.pericias.esp.includes(id);
+      const cb=el("input",{type:"checkbox",id:"pe-"+id});cb.checked=marcada;cb.disabled=!marcada&&st.pericias.esp.length>=n1;
+      cb.addEventListener("change",()=>{if(cb.checked)st.pericias.esp.push(id);else st.pericias.esp=st.pericias.esp.filter(x=>x!==id);changed()});
+      grid.append(el("label",{},cb,PNOME[id]));
+    }
+    sec.append(grid);box.append(sec);
+  }
+  if(rowsAt(true).some(x=>x.c==="bardo"&&x.n>=2))box.append(el("p",{class:"hint",text:"Pau para Toda Obra (bardo 2+): metade do bônus de proficiência nas perícias que você não domina e na iniciativa. Já está nas contas."}));
+}
+
+/* ---------- detalhes ---------- */
+function renderDetalhes(){
+  for(const[k,id]of[["pers","d-pers"],["ideais","d-ideais"],["vinc","d-vinc"],["def","d-def"],["equip","d-equip"],["idiomas","d-idiomas"],["carac","d-carac"]]){
+    const t=$("#"+id);t.value=st.det[k]||"";t.oninput=()=>{st.det[k]=t.value;saveDraft();renderSheet()};
+  }
+  const box=$("#ataquesBox");box.replaceChildren();
+  st.det.ataques.forEach((a,i)=>{
+    const mk=(campo,ph,lab)=>{const inp=el("input",{type:"text",id:`at-${campo}-${i}`,maxlength:"40",placeholder:ph});inp.value=a[campo]||"";inp.oninput=()=>{a[campo]=inp.value;saveDraft();renderSheet()};return el("label",{class:"f"},lab,inp)};
+    box.append(el("div",{class:"atk"},mk("n","Ex.: Espada longa","Nome"),mk("b","+5","Ataque"),mk("d","1d8+3 cortante","Dano e tipo")));
+  });
+}
+
+/* ---------- folha de personagem ---------- */
+function txt(v,ph){return el("div",{class:"dtext"+(v&&v.trim()?"":" vazio"),text:v&&v.trim()?v:ph})}
+function fichaDnD(l,next){
+  const k=calc(l,next),pk=profPericias(next),meio=Math.floor(k.p/2);
+  const r=RACAS.find(x=>x.id===st.raca)||RACAS[0];
+  const bonusPer=(id,a)=>k.m[a]+(pk.esp.has(id)?2*k.p:pk.prof.has(id)?k.p:pk.jack?meio:0);
+  const ini=k.m.des+(pk.jack?meio:0);
+  const d=el("div",{class:"dnd"});
+  /* cabeçalho */
+  const campo=(v,lab)=>el("div",{},el("span",{text:v||" "}),el("div",{class:"cap",text:lab}));
+  d.append(el("div",{class:"dhead"},
+    el("div",{class:"dname"},el("b",{text:st.nomePers||" "}),el("div",{class:"cap",text:"Nome do personagem"})),
+    el("div",{class:"dfields"},
+      campo(resumoClasses(k.rows),"Classe e nível"),campo(nomeAnt(),"Antecedente"),campo(st.nomeJog,"Jogador"),
+      campo(r.nome,"Raça"),campo(st.tendencia,"Tendência"),campo(`Nível ${l}`+(next?" (confronto final)":""),"Nível do personagem"))));
+  /* coluna 1: atributos, resistências, perícias */
+  const abs=el("div",{class:"abstack"});
+  for(const a of AB)abs.append(el("div",{class:"abox"},el("div",{class:"cap",text:ABL[a]}),el("div",{class:"md",text:sg(k.m[a])}),el("span",{class:"sc",text:String(k.sc[a])})));
+  const saves=el("div",{class:"dbox"});
+  for(const a of AB){const pr=k.saves.includes(a);saves.append(el("div",{class:"lrow"},el("span",{class:"dot",text:pr?"●":"○"}),el("span",{class:"bn",text:sg(k.m[a]+(pr?k.p:0))}),el("span",{text:ABL[a]})))}
+  saves.append(el("div",{class:"cap",text:"Testes de resistência"}));
+  const per=el("div",{class:"dbox"});
+  for(const[id,nome,a]of PERICIAS)per.append(el("div",{class:"lrow"},el("span",{class:"dot",text:pk.esp.has(id)?"◉":pk.prof.has(id)?"●":"○"}),el("span",{class:"bn",text:sg(bonusPer(id,a))}),el("span",{},nome+" ",el("small",{text:`(${ABN[a]})`}))));
+  per.append(el("div",{class:"cap",text:"Perícias · ● proficiente · ◉ especialista"}));
+  const dir=el("div",{class:"dcol"},el("div",{class:"pill"},el("b",{text:" "}),"Inspiração"),el("div",{class:"pill"},el("b",{text:sg(k.p)}),"Bônus de proficiência"),saves,per);
+  const c1=el("div",{class:"dcol"},el("div",{class:"dleft"},abs,dir),
+    el("div",{class:"pill"},el("b",{text:String(10+bonusPer("percepcao","sab"))}),"Sabedoria (Percepção) passiva"),
+    el("div",{class:"dbox"},txt([st.antecedente===PERS&&st.antPers.prof?"Do antecedente: "+st.antPers.prof:"",st.det.idiomas].filter(Boolean).join("\n"),"Idiomas, armas, armaduras e ferramentas"),el("div",{class:"cap",text:"Idiomas e outras proficiências"})));
+  /* coluna 2: combate */
+  const big=(v,lab,cls)=>el("div",{class:"big"+(cls?" "+cls:"")},el("b",{text:v}),el("div",{class:"cap",text:lab}));
+  const dv=k.rows.map(x=>`${x.n}d${CLASSES[x.c].dv}`).join(" + ");
+  const atk=el("table",{class:"dtable"},el("thead",{},el("tr",{},el("th",{text:"Nome"}),el("th",{text:"Bônus"}),el("th",{text:"Dano/tipo"}))));
+  const tb=el("tbody");for(const a of st.det.ataques)tb.append(el("tr",{},el("td",{text:a.n||" "}),el("td",{text:a.b||""}),el("td",{text:a.d||""})));atk.append(tb);
+  const mag=k.magia?el("div",{class:"note",style:"margin-top:6px"},...k.magia.dcs.map(x=>el("div",{text:x}))):null;
+  const c2=el("div",{class:"dcol"},
+    el("div",{class:"trio"},big(String(k.ca),"Classe de armadura","ac"),big(sg(ini),"Iniciativa"),big(`${k.desl} pés`,"Deslocamento")),
+    el("div",{class:"hp"},el("div",{class:"line"},"Pontos de vida máximos",el("b",{text:String(k.pv)})),el("div",{class:"blank"}),el("div",{class:"cap",text:"Pontos de vida atuais"})),
+    el("div",{class:"hp"},el("div",{class:"blank",style:"height:28px"}),el("div",{class:"cap",text:"Pontos de vida temporários"})),
+    el("div",{class:"duo"},
+      el("div",{class:"dbox"},el("div",{class:"note",text:"Total: "+dv}),el("div",{style:"height:18px"}),el("div",{class:"cap",text:"Dados de vida"})),
+      el("div",{class:"dbox death"},el("div",{},"Sucessos ",el("span",{text:"○○○"})),el("div",{},"Falhas ",el("span",{text:"○○○"})),el("div",{class:"cap",text:"Testes contra a morte"}))),
+    el("div",{class:"dbox"},atk,mag,el("div",{class:"cap",text:"Ataques e magias"})),
+    el("div",{class:"dbox"},txt(st.det.equip,"Equipamento e dinheiro"),el("div",{class:"cap",text:"Equipamento"})));
+  /* coluna 3: personalidade e características */
+  const caixa=(v,lab)=>el("div",{class:"dbox"},txt(v," "),el("div",{class:"cap",text:lab}));
+  let carac=st.det.carac||"";
+  const extras=[];
+  if(caracAnt())extras.push(`Característica de antecedente: ${caracAnt()}`);
+  if(st.talentoRaca)extras.push("Talento de origem: "+st.talentoRaca);
+  if(next&&asiLevel(st.proxima,nivelProxima()))extras.push(st.sobe.tipo==="atributo"?`Nível ${l}: +1 ${ABL[st.sobe.a]}, +1 ${ABL[st.sobe.b]}`:`Nível ${l}: talento ${st.sobe.talento||"a definir"}`);
+  if(extras.length)carac=extras.join("\n")+(carac?"\n\n"+carac:"");
+  const c3=el("div",{class:"dcol"},el("div",{class:"dbox"},
+      txt(st.det.pers," "),el("div",{class:"cap",text:"Traços de personalidade"}),
+      txt(st.det.ideais," "),el("div",{class:"cap",text:"Ideais"}),
+      txt(st.det.vinc," "),el("div",{class:"cap",text:"Vínculos"}),
+      txt(st.det.def," "),el("div",{class:"cap",text:"Defeitos"})),
+    el("div",{class:"dbox"},txt(carac,"Habilidades de raça e de classe"),el("div",{class:"cap",text:"Características e talentos"})));
+  d.append(el("div",{class:"dbody"},c1,c2,c3));
+  /* página de magias */
+  if(k.magia){
+    const sp=el("div",{class:"dspell"});
+    for(const x of k.rows){
+      const mi=magiaDe(x,k.m);if(!mi)continue;
+      const mg=st.magias[x.c]||{truques:[],magias:[]};
+      const t=(mg.truques||[]).slice(0,mi.truques),m=(mg.magias||[]).slice(0,mi.qtd);
+      const key=CLASSES[x.c].key||"int";
+      const bx=el("div",{class:"dbox"},
+        el("div",{class:"note"},el("b",{text:CLASSES[x.c].nome+(THIRD[x.s]?` (${x.s})`:"")}),` · ${ABL[key]} · CD ${8+k.p+k.m[key]} · ataque ${sg(k.p+k.m[key])} · até o ${ORD[(mi.circ||1)-1]} círculo`));
+      if(mi.truques){const ol=el("ol");t.forEach(v=>ol.append(el("li",{text:v||"—"})));for(let i=t.length;i<mi.truques;i++)ol.append(el("li",{text:"—"}));bx.append(el("p",{class:"cap",style:"text-align:left",text:`Truques (${mi.truques})`}),ol)}
+      const ol=el("ol");m.forEach(v=>ol.append(el("li",{text:v||"—"})));for(let i=m.length;i<mi.qtd;i++)ol.append(el("li",{text:"—"}));
+      bx.append(el("p",{class:"cap",style:"text-align:left",text:`${mi.tipo} (${mi.qtd})`+(mi.extra?` · ${mi.extra}`:"")}),ol);
+      sp.append(bx);
+    }
+    const esp=el("div",{class:"dbox"});
+    if(k.magia.espacos)esp.append(el("div",{class:"slots",text:"Espaços por círculo: "+k.magia.espacos}));
+    if(k.magia.pacto)esp.append(el("div",{class:"slots",text:"Magia de pacto: "+k.magia.pacto}));
+    esp.append(el("div",{class:"cap",text:"Espaços de magia"}));
+    d.append(el("div",{class:"dcol"},el("h3",{text:"Magias"}),esp,sp));
+  }
+  return d;
+}
+function renderVerNivel(box,onChange){
+  box.replaceChildren();
+  for(const[k,t]of[["inicio",`Nível ${st.nivel}`],["final",`Nível ${st.nivel+1} (confronto)`]]){
+    const b=el("button",{type:"button","aria-pressed":String(st.verFicha===k),text:t});
+    b.addEventListener("click",()=>{st.verFicha=k;onChange()});box.append(b);
+  }
+}
+function renderSheet(){
+  const s=$("#sheet");
+  if(somaNiveis()!==st.nivel){$("#verNivel").replaceChildren();s.replaceChildren(el("p",{class:"note",text:`Distribua exatamente ${st.nivel} níveis entre as classes para ver a ficha.`}));return}
+  renderVerNivel($("#verNivel"),()=>{saveDraft();renderSheet()});
+  const fin=st.verFicha==="final";
+  s.replaceChildren(fichaDnD(fin?st.nivel+1:st.nivel,fin));
+}
+/* ---------- magias: quantidades por classe (LDJ, GXTC, CTTC) ---------- */
+const CONHECIDAS={bardo:[4,5,6,7,8,9,10,11,12,14,15,15],feiticeiro:[2,3,4,5,6,7,8,9,10,11,12,12],bruxo:[2,3,4,5,6,7,8,9,10,10,11,11],patrulheiro:[0,2,3,3,4,4,5,5,6,6,7,7]};
+const TERCO=[0,0,3,4,4,4,5,6,6,7,8,8];
+const NOTAS={
+  clerigo:"Prepara a lista do dia entre todas as magias de clérigo; troca após um descanso longo. As magias de domínio vêm a mais, sempre preparadas.",
+  druida:"Prepara a lista do dia entre todas as magias de druida; troca após um descanso longo. Algumas subclasses dão magias a mais, sempre preparadas.",
+  paladino:"Prepara a lista do dia entre as magias de paladino; troca após um descanso longo. As magias de juramento vêm a mais, sempre preparadas.",
+  artifice:"Prepara a lista do dia entre as magias de artífice; troca após um descanso longo. As magias da especialização vêm a mais, sempre preparadas.",
+  mago:"O grimório guarda as magias que você conhece. Por dia, você prepara algumas delas (veja o número abaixo).",
+  bardo:"Magias conhecidas: ao subir de nível, pode trocar uma por outra da lista de bardo.",
+  feiticeiro:"Magias conhecidas: ao subir de nível, pode trocar uma por outra da lista de feiticeiro.",
+  bruxo:"Magias conhecidas: ao subir de nível, pode trocar uma por outra da lista de bruxo. Invocações e dádiva do pacto ficam na ficha completa.",
+  patrulheiro:"Magias conhecidas: ao subir de nível, pode trocar uma por outra da lista de patrulheiro.",
+  "Cavaleiro Arcano":"Magias da lista de mago, quase todas de abjuração ou evocação (veja as exceções no LDJ).",
+  "Trapaceiro Arcano":"Magias da lista de mago, quase todas de encantamento ou ilusão. Um dos truques é Mãos Mágicas."
+};
+function circuloMax(c,s,n){
+  if(c==="bruxo")return PACT[n][1];
+  const t=CLASSES[c].cast;
+  if(t==="full")return Math.min(9,Math.ceil(n/2));
+  if(t==="half")return n<2?0:n>=17?5:n>=13?4:n>=9?3:n>=5?2:1;
+  if(t==="art")return n>=17?5:n>=13?4:n>=9?3:n>=5?2:1;
+  if(THIRD[s])return n<3?0:n>=19?4:n>=13?3:n>=7?2:1;
+  return 0;
+}
+/* {truques, tipo, qtd, extra} para uma classe num nível, com os modificadores dados */
+function magiaDe(x,m){
+  const c=x.c,n=Math.min(12,x.n),cls=CLASSES[c];
+  const terco=!cls.cast&&THIRD[x.s]&&n>=3;
+  if(!cls.cast&&!terco)return null;
+  if((c==="paladino"||c==="patrulheiro")&&n<2)return null;
+  let truques=0;
+  if(c==="bardo"||c==="druida"||c==="bruxo")truques=n>=10?4:n>=4?3:2;
+  else if(c==="clerigo"||c==="mago")truques=n>=10?5:n>=4?4:3;
+  else if(c==="feiticeiro")truques=n>=10?6:n>=4?5:4;
+  else if(c==="artifice")truques=n>=14?4:n>=10?3:2;
+  else if(x.s==="Cavaleiro Arcano")truques=n>=10?3:2;
+  else if(x.s==="Trapaceiro Arcano")truques=n>=10?4:3;
+  const key=cls.key||"int",mk=m[key];
+  let tipo,qtd,extra=null;
+  if(terco){tipo="Magias conhecidas";qtd=TERCO[n-1]}
+  else if(CONHECIDAS[c]){tipo="Magias conhecidas";qtd=CONHECIDAS[c][n-1]}
+  else if(c==="mago"){tipo="Magias no grimório";qtd=6+2*(n-1);extra=`Prepara ${Math.max(1,mk+n)} por dia`}
+  else if(c==="paladino"||c==="artifice"){tipo="Magias preparadas";qtd=Math.max(1,mk+Math.floor(n/2))}
+  else {tipo="Magias preparadas";qtd=Math.max(1,mk+n)}
+  return {truques,tipo,qtd,extra,circ:circuloMax(c,x.s,n),nota:NOTAS[terco?x.s:c]||""};
+}
+function campos(lista,qAgora,qDepois,idPre,rotulo,nivelProx){
+  const box=el("div",{class:"mlist"});const total=Math.max(qAgora,qDepois);
+  while(lista.length<total)lista.push("");
+  for(let i=0;i<total;i++){
+    const nova=i>=qAgora;
+    const inp=el("input",{type:"text",id:`${idPre}-${i}`,maxlength:"50",placeholder:nova?"Nova no nível "+nivelProx:""});inp.value=lista[i]||"";
+    inp.addEventListener("input",()=>{lista[i]=inp.value;saveDraft()});
+    box.append(el("label",{class:nova?"nova":""},nova?`${rotulo} ${i+1} · nível ${nivelProx}`:`${rotulo} ${i+1}`,inp));
+  }
+  return box;
+}
+function renderMagias(){
+  const box=$("#magiasBox");
+  box.querySelectorAll(":scope > :not(legend)").forEach(n=>n.remove());
+  if(somaNiveis()!==st.nivel){box.hidden=true;return}
+  const k0=calc(st.nivel,false),k1=calc(st.nivel+1,true);
+  const ids=[...new Set(k1.rows.map(x=>x.c))];
+  let algum=false;
+  box.append(el("p",{class:"hint",text:"Escreva o nome das magias que escolheu, da lista da sua classe no livro. Os campos destacados são as que você ganha ao subir de nível."}));
+  for(const id of ids){
+    const r0=k0.rows.find(x=>x.c===id),r1=k1.rows.find(x=>x.c===id);
+    const a=r0?magiaDe(r0,k0.m):null,b=r1?magiaDe(r1,k1.m):null;
+    if(!a&&!b)continue;
+    algum=true;
+    const nome=CLASSES[id].nome+(r1&&THIRD[r1.s]?` (${r1.s})`:"");
+    const lv0=r0?r0.n:0,lv1=r1.n;
+    const sec=el("div",{class:"mclass"});
+    const resumo=[];
+    if(b.truques)resumo.push(`${a?a.truques:0}${b.truques>(a?a.truques:0)?" → "+b.truques:""} truques`);
+    resumo.push(`${a?a.qtd:0}${b.qtd!==(a?a.qtd:0)?" → "+b.qtd:""} ${b.tipo.toLowerCase()}`);
+    resumo.push(`até o ${ORD[(b.circ||1)-1]} círculo`+(a&&a.circ!==b.circ?` (hoje ${ORD[(a.circ||1)-1]})`:""));
+    if(b.extra)resumo.push(b.extra+(a&&a.extra&&a.extra!==b.extra?` (hoje: ${a.extra.replace("Prepara ","").replace(" por dia","")})`:""));
+    sec.append(el("h3",{text:`${nome} ${lv0?lv0+" → "+lv1:"(nova no nível "+(st.nivel+1)+")"}`}),el("p",{class:"note",text:resumo.join(" · ")}));
+    if(b.nota)sec.append(el("p",{class:"hint",text:b.nota}));
+    const mg=st.magias[id]||(st.magias[id]={truques:[],magias:[]});
+    if(b.truques){sec.append(el("p",{class:"eyebrow",text:"Truques"}),campos(mg.truques,a?a.truques:0,b.truques,`mt-${id}`,"Truque",st.nivel+1))}
+    sec.append(el("p",{class:"eyebrow",text:b.tipo}),campos(mg.magias,a?a.qtd:0,b.qtd,`mm-${id}`,"Magia",st.nivel+1));
+    box.append(sec);
+  }
+  box.hidden=!algum;
+}
+function valid(){
+  if(somaNiveis()!==st.nivel)return `Distribua exatamente ${st.nivel} níveis entre as classes.`;
+  if(!st.nomePers.trim())return "Dê um nome ao personagem.";
+  if(!st.nomeJog.trim())return "Escreva seu nome para o mestre saber quem é.";
+  if(st.metodo==="compra"&&AB.reduce((s,a)=>s+PB[st.compra[a]],0)>27)return "A compra de pontos passou de 27.";
+  if(st.metodo==="padrao"&&AB.some(a=>!st.padrao[a]))return "Distribua todos os valores padrão.";
+  if(st.metodo==="aleatorio"&&!st.rolados)return "Role os atributos.";
+  if(st.metodo==="aleatorio"&&AB.some(a=>st.rolAtrib[a]===""))return "Distribua os seis resultados rolados.";
+  return "";
+}
+function changed(){saveDraft();renderPericias();renderSheet();renderAsiNext();renderMagias();updateSaveUi()}
+
+/* eventos do formulário */
+$("#nomePers").addEventListener("input",e=>{st.nomePers=e.target.value;saveDraft();updateSaveUi()});
+$("#nomeJog").addEventListener("input",e=>{st.nomeJog=e.target.value;saveDraft();updateSaveUi()});
+$("#antecedente").addEventListener("change",e=>{st.antecedente=e.target.value;renderAntPers();changed()});
+function renderAntPers(){
+  const box=$("#antPersBox");box.hidden=st.antecedente!==PERS;box.replaceChildren();
+  if(box.hidden)return;
+  const ap=st.antPers;
+  const nome=el("input",{type:"text",id:"ap-nome",maxlength:"40",placeholder:"Ex.: Guarda-caça, Exilado, Caçador de recompensas"});nome.value=ap.nome;
+  nome.addEventListener("input",()=>{ap.nome=nome.value;saveDraft();renderPericias();renderSheet()});
+  const car=el("select",{id:"ap-carac"});ap.carac=fillSelect(car,Object.entries(BG_CARAC).map(([b,c])=>({v:c,t:`${c} (de ${b})`})),ap.carac);
+  car.addEventListener("change",()=>{ap.carac=car.value;saveDraft();renderSheet()});
+  const prof=el("input",{type:"text",id:"ap-prof",maxlength:"80",placeholder:"Ex.: Ferramentas de ladrão e Élfico"});prof.value=ap.prof;
+  prof.addEventListener("input",()=>{ap.prof=prof.value;saveDraft();renderSheet()});
+  box.append(
+    el("p",{class:"hint",text:"Antecedente personalizado (LDJ): escolha duas perícias quaisquer (na seção Perícias, abaixo), duas proficiências entre ferramentas e idiomas, e a característica de um dos antecedentes do livro."}),
+    el("div",{class:"grid2"},
+      el("label",{class:"f"},"Nome do antecedente",nome),
+      el("label",{class:"f"},"Característica",car),
+      el("label",{class:"f"},"Duas proficiências (ferramentas ou idiomas)",prof)));
+}
+$("#tendencia").addEventListener("change",e=>{st.tendencia=e.target.value;saveDraft();renderSheet()});
+$("#raca").addEventListener("change",e=>{st.raca=e.target.value;renderAsi();renderAbil();renderClasses();changed()});
+$("#armadura").addEventListener("change",e=>{st.armadura=e.target.value;changed()});
+$("#escudo").addEventListener("change",e=>{st.escudo=e.target.checked;changed()});
+$("#metodo").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st.metodo=b.dataset.m;renderAbil();changed()});
+
+/* ---------- inscrição (Discord, via api/inscricao.js) ---------- */
+/* Cada inscrição vira uma mensagem no canal do mestre, com a ficha em texto anexada.
+   A função da Vercel guarda o webhook; a página não lê o canal, então só este navegador sabe o que já enviou. */
+const LS_ENVIO="tres-noites-inscricao";
+let minha=null;
+try{const raw=localStorage.getItem(LS_ENVIO);if(raw)minha=JSON.parse(raw)}catch(e){}
+function setBanner(html,kind){const b=$("#statusBanner");b.className="banner "+(kind||"");b.replaceChildren(...html);b.hidden=false}
+function updateSaveUi(){
+  const v=valid(),btn=$("#saveBtn"),h=$("#saveHint");
+  btn.disabled=!!v;
+  if(v){h.textContent=v;return}
+  h.textContent=minha?"Você já enviou uma inscrição deste navegador. Enviar de novo manda a versão nova para o mestre.":"";
+}
+function textoFicha(r){
+  const k0=calc(st.nivel,false),k1=calc(st.nivel+1,true),L=[];
+  L.push(`${r.personagem} (jogador: ${r.jogador})`);
+  L.push(`${ADV[r.aventura]?.nome||r.aventura}, mesa de nível ${r.nivel}`);
+  L.push(`${r.raca} · ${nomeAnt()}`+(caracAnt()?` (característica: ${caracAnt()})`:"")+(st.antecedente===PERS&&st.antPers.prof?` · proficiências do antecedente: ${st.antPers.prof}`:"")+(st.talentoRaca?` · talento de origem: ${st.talentoRaca}`:""));
+  for(const[l,k,t]of[[st.nivel,k0,"Início"],[st.nivel+1,k1,"Confronto final"]]){
+    L.push("",`${t}, nível ${l}: ${resumoClasses(k.rows)}`);
+    L.push(`PV ${k.pv} · CA ${k.ca} · Proficiência ${sg(k.p)} · Iniciativa ${sg(k.m.des)} · Deslocamento ${k.desl} pés`);
+    L.push(AB.map(a=>`${ABN[a]} ${k.sc[a]} (${sg(k.m[a])})`).join(" · "));
+    L.push("Resistências: "+k.saves.map(a=>`${ABL[a]} ${sg(k.m[a]+k.p)}`).join(", "));
+    {const pk=profPericias(l>st.nivel),meio=Math.floor(k.p/2);
+     L.push("Perícias: "+PERICIAS.filter(([id])=>pk.prof.has(id)).map(([id,n,a])=>`${n} ${sg(k.m[a]+(pk.esp.has(id)?2*k.p:k.p))}${pk.esp.has(id)?" (especialista)":""}`).join(", "));
+     L.push(`Percepção passiva ${10+k.m.sab+(pk.esp.has("percepcao")?2*k.p:pk.prof.has("percepcao")?k.p:pk.jack?meio:0)}`);}
+    if(k.magia){L.push(...k.magia.dcs);if(k.magia.espacos)L.push("Espaços: "+k.magia.espacos);if(k.magia.pacto)L.push("Pacto: "+k.magia.pacto)}
+  }
+  if(asiLevel(st.proxima,nivelProxima()))L.push("",`Subida de nível: ${st.sobe.tipo==="atributo"?`+1 ${ABL[st.sobe.a]}, +1 ${ABL[st.sobe.b]}`:`talento ${st.sobe.talento||"a definir"}`}`);
+  else L.push("",`Subida de nível: o novo nível vai para ${CLASSES[st.proxima]?.nome||st.proxima}`);
+  for(const[id,mg]of Object.entries(st.magias||{})){
+    const t=(mg.truques||[]).filter(Boolean),m=(mg.magias||[]).filter(Boolean);
+    if(!t.length&&!m.length||!CLASSES[id])continue;
+    L.push("",`Magias de ${CLASSES[id].nome}`);
+    if(t.length)L.push("Truques: "+t.join(", "));
+    if(m.length)L.push("Magias: "+m.join(", "));
+  }
+  const dt=st.det||{};
+  for(const[lab,v]of[["Tendência",st.tendencia],["Traços de personalidade",dt.pers],["Ideais",dt.ideais],["Vínculos",dt.vinc],["Defeitos",dt.def],["Idiomas e proficiências",dt.idiomas],["Equipamento",dt.equip],["Características e talentos",dt.carac]])if(v&&String(v).trim())L.push("",`${lab}: ${v}`);
+  const atq=(dt.ataques||[]).filter(a=>a.n);if(atq.length)L.push("","Ataques: "+atq.map(a=>`${a.n} ${a.b} (${a.d})`).join("; "));
+  if(r.rolagem)L.push("",`Atributos rolados: ${r.rolagem.resultados.join(", ")} (rolou ${r.rolagem.vezes} vez(es))`);
+  else L.push("",`Atributos: ${st.metodo==="padrao"?"valores padrão":"compra de pontos"}`);
+  return L.join("\n");
+}
+/* o conteúdo sai daqui; título, cor, anexo e limites do Discord ficam na função */
+function corpoInscricao(r,atualizacao){
+  const a=ADV[r.aventura],k0=calc(st.nivel,false),k1=calc(st.nivel+1,true);
+  const campos=[
+    {name:"Jogador",value:r.jogador,inline:true},
+    {name:"Mesa",value:`${a.nome} · nível ${r.nivel} (${NIVEIS[r.nivel].rotulo})`,inline:true},
+    {name:"Personagem",value:`${r.raca} · ${r.classe}`},
+    {name:"Início",value:`PV ${k0.pv} · CA ${k0.ca}`,inline:true},
+    {name:"Confronto final",value:`${resumoClasses(k1.rows)} · PV ${k1.pv} · CA ${k1.ca}`,inline:true}];
+  if(r.rolagem)campos.push({name:"Atributos rolados",value:`${r.rolagem.resultados.join(", ")} · rolou ${r.rolagem.vezes} vez(es)`});
+  return {atualizacao,aventura:r.aventura,personagem:r.personagem,campos,ficha:textoFicha(r)};
+}
+$("#fichaForm").addEventListener("submit",async e=>{
+  e.preventDefault();if(valid())return;
+  const msg=$("#saveMsg"),btn=$("#saveBtn");btn.disabled=true;
+  const r=RACAS.find(x=>x.id===st.raca);
+  const doc={aventura:st.adv,nivel:st.nivel,jogador:st.nomeJog.trim(),personagem:st.nomePers.trim(),raca:r.nome,classe:resumoClasses(st.classes),
+    rolagem:st.metodo==="aleatorio"&&st.rolados?{resultados:st.rolados.map(x=>x.total),vezes:st.vezesRolado}:null};
+  try{
+    const res=await fetch("/api/inscricao",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(corpoInscricao(doc,!!minha))});
+    if(!res.ok)throw res.status;
+    minha={personagem:doc.personagem,raca:doc.raca,classe:doc.classe,nivel:doc.nivel,aventura:doc.aventura,enviado:new Date().toISOString()};
+    try{localStorage.setItem(LS_ENVIO,JSON.stringify(minha))}catch(e){}
+    msg.className="banner ok";msg.replaceChildren(el("strong",{text:"Inscrição enviada. "}),`${doc.personagem} está na mesa de nível ${doc.nivel} de ${ADV[doc.aventura].nome}. Se mudar algo na ficha, é só enviar de novo.`);msg.hidden=false;
+    showMine();
+  }catch(err){
+    msg.className="banner warn";
+    msg.textContent=err===503?"As inscrições ainda não foram abertas. A ficha fica guardada neste navegador.":err===429?"Muita gente enviando ao mesmo tempo. Espere alguns segundos e tente de novo.":"Não deu para enviar agora. Verifique a conexão e tente de novo.";
+    msg.hidden=false;
+  }finally{updateSaveUi()}
+});
+function showMine(){
+  if(!minha){$("#statusBanner").hidden=true;return}
+  const ed=el("button",{class:"link",type:"button",text:"Editar inscrição"});
+  ed.addEventListener("click",()=>go("ficha"));
+  setBanner([el("strong",{text:"Inscrição enviada: "}),`${minha.personagem}, ${minha.raca} ${minha.classe}, na mesa de nível ${minha.nivel} de ${ADV[minha.aventura]?.nome||minha.aventura}. `,ed],"ok");
+}
+
+/* ---------- inicialização ---------- */
+renderAdvs();go("aventura");showMine();updateSaveUi();
+})();
+</script>
+
+</body></html>
